@@ -3,7 +3,8 @@
 
 <head>
   <title>Homepage</title>
-  <meta name="viewport" content="width=device-width, inital-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/style.css" />
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 
@@ -19,7 +20,16 @@
       </div>
       <div class="menu-list">
         <ul>
-          <li class="menu-list-username">{{ .Username }}</li>
+          <li class="menu-list-username">
+                <a href="/profile" class="profile">
+                  <span class="profile-username">
+                    {{ .ProfileName }}
+                  </span>
+                  <div class="profile-avatar">
+                    <img src="/static/uploads/images/{{ .AvatarName }}" alt="Avatar profile image" />
+                  </div>
+                </a>
+          </li>
           <li>
             <a href="/">Home</a>
           </li>
@@ -33,9 +43,9 @@
       </div>
     </header>
     {{ else }}
-      {{ template "header"}}
+    {{ template "header"}}
     {{ end }}
-    <h1 class="title">Homepage</h1>
+    <h2 class="title">Homepage</h2>
   </main>
 </body>
 

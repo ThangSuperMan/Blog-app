@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Homepage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/profile.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  <main>
+    <!-- User signed in -->
+    {{ if .IsSignedIn }}
+    <header>
+      <div class="menu-logo">
+        <a href="/">
+          Logo
+        </a>
+      </div>
+      <div class="menu-list">
+        <ul>
+          <li class="menu-list-username">
+            <a href="/profile" class="profile">
+              <span class="profile-username">
+                {{ .ProfileName }}
+              </span>
+              <div class="profile-avatar">
+                <img src="/static/uploads/images/{{ .AvatarName }}" alt="Avatar profile image" />
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/">Home</a>
+          </li>
+          <li>
+            <a href="/about">About</a>
+          </li>
+          <li>
+            <a href="/logout">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </header>
+    {{ else }}
+    {{ template "header"}}
+    {{ end }}
+    <h2 class="title">Profile page</h2>
+    <div class="profile-container">
+       <div>
+        <div class="profile-container-top">
+          <div>
+            <img src="/static/uploads/images/{{ .AvatarName }}" />
+            <h3>{{ .ProfileName }}</h3>
+          </div>
+        </div>
+        <div class="profile-container-content">
+          <div>
+            <form action="/user/update_profile" method="post">
+              <div class="text-field">
+                <label for="username">Username</label>
+                  <div class="text-field-wrapper">
+                    <input type="text" placeholder="Username" id="username" />
+                    <div>
+                      <i class="fa-solid fa-pencil"></i>
+                      <a href="/profile/edit_info">
+                        <span>Edit</span>
+                      </a>
+                    </div>
+                  </div>
+              </div>
+              <div class="text-field">
+                <label for="password">Password</label>
+                <input type="password" placeholder="Password" id="password" />
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>

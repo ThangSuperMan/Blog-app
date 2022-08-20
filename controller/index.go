@@ -18,12 +18,21 @@ import (
 type AccessToken struct {
 	IsSignedIn  bool
 	Username    string
+	Password    string
 	ProfileName string
 	AvatarName  string
 }
 
 // One hour
 var LIVETIME_COOKIE int = 1
+
+func HandleSessionsTokenCookieStillNotLogOut(username string) {
+  fmt.Println("HandleSessionsTokenCookieStillNotLogOut") 
+   fmt.Println("Method Post") 
+    db := model.ConnectDatabase()
+    fmt.Println("username: ", username)
+    model.DeleteSessionCookie(db, username)
+}
 
 func GetSessionTokenCookie(cookieName string, r *http.Request) string {
 	cookie, err := r.Cookie(cookieName)
@@ -63,10 +72,8 @@ func LogOut(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("Have cookie, now delete that.")
 	cookieName := "my_cookie"
 	var sessionToken string = GetSessionTokenCookie(cookieName, r)
-	fmt.Println("sessionToken: ", sessionToken)
 	db := model.ConnectDatabase()
 	model.DeleteSessionCookie(db, sessionToken)
 
@@ -77,11 +84,11 @@ func LogOut(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 	}
 
+  // fmt.Fprintln(w, "<p>Logged out your account successfully, have a good day :)")
 	http.SetCookie(w, cookie)
 }
 
 func RenderTemplate(templateName string, w http.ResponseWriter, r *http.Request) {
-	fmt.Println("RenderTemplate")
 	tpl, err := template.ParseGlob("./templates/*.html")
 	helper.HaltOn(err)
 
@@ -91,13 +98,15 @@ func RenderTemplate(templateName string, w http.ResponseWriter, r *http.Request)
 	if cookieExists {
 		var sessionToken string = GetSessionTokenCookie(cookieName, r)
 		if sessionToken != "" {
-			db := model.ConnectDatabase()
+			db := model.ConnectDatabase ()
+      defer db.Close()
 			var idUser int = model.GetIdUserFromSessionsTable(db, sessionToken)
 			var user model.User
 			user = model.GetInfoUser(db, idUser)
 			data := AccessToken{
 				IsSignedIn:  true,
 				Username:    user.Username,
+				Password:    user.Password,
 				ProfileName: user.Profile_name,
 				AvatarName:  user.Avatar_name,
 			}
@@ -115,33 +124,6 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("RenderHomePage")
 	templateName := "index.html"
 	RenderTemplate(templateName, w, r)
-	// tpl, err := template.ParseGlob("./templates/*.html")
-	// helper.HaltOn(err)
-	//
-	// var cookieExists bool = CheckSessionCookieExists(w, r)
-	// cookieName := "my_cookie"
-	//
-	// if cookieExists {
-	// 	var sessionToken string = GetSessionTokenCookie(cookieName, r)
-	// 	if sessionToken != "" {
-	// 		db := model.ConnectDatabase()
-	// 		var idUser int = model.GetIdUserFromSessionsTable(db, sessionToken)
-	// 		var user model.User
-	// 		user = model.GetInfoUser(db, idUser)
-	// 		data := AccessToken{
-	// 			IsSignedIn:  true,
-	// 			Username:    user.Username,
-	// 			ProfileName: user.Profile_name,
-	// 			AvatarName:  user.Avatar_name,
-	// 		}
-	//
-	// 		tpl.ExecuteTemplate(w, "index.html", data)
-	// 	} else {
-	// 		tpl.ExecuteTemplate(w, "index.html", nil)
-	// 	}
-	// } else {
-	// 	tpl.ExecuteTemplate(w, "index.html", nil)
-	// }
 }
 
 func RenderProfilePage(w http.ResponseWriter, r *http.Request) {
@@ -183,37 +165,6 @@ func RenderAboutPage(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("RenderAboutPage")
 	templateName := "about.html"
 	RenderTemplate(templateName, w, r)
-	// tpl, err := template.ParseGlob("./templates/*.html")
-	// helper.HaltOn(err)
-	// var cookieExists bool = CheckSessionCookieExists(w, r)
-	//
-	// cookieName := "my_cookie"
-	//
-	// if cookieExists {
-	// 	var sessionToken string = GetSessionTokenCookie(cookieName, r)
-	// 	if sessionToken != "" {
-	// 		db := model.ConnectDatabase()
-	// 		var idUser int = model.GetIdUserFromSessionsTable(db, sessionToken)
-	// 		// username, avatarName := model.GetUsernameAndAvatarNameOfUsersTable(db, idUser)
-	//
-	// 		var user model.User
-	// 		user = model.GetInfoUser(db, idUser)
-	// 		fmt.Println("user: ", user)
-	//
-	// 		data := AccessToken{
-	// 			IsSignedIn:  true,
-	// 			Username:    user.Username,
-	// 			ProfileName: user.Profile_name,
-	// 			AvatarName:  user.Avatar_name,
-	// 		}
-	//
-	// 		tpl.ExecuteTemplate(w, "about.html", data)
-	// 	} else {
-	// 		tpl.ExecuteTemplate(w, "about.html", nil)
-	// 	}
-	// } else {
-	// 	tpl.ExecuteTemplate(w, "about.html", nil)
-	// }
 }
 
 func HandlerSignup(w http.ResponseWriter, r *http.Request) {
@@ -238,10 +189,6 @@ func HandlerSignup(w http.ResponseWriter, r *http.Request) {
 	createdAt := time.Now().Format("2006-01-02 15:04:05")
 	updatedAt := ""
 
-	fmt.Println("username: ", username)
-	fmt.Println("password: ", password)
-	fmt.Println("avatarProfile: ", profileName)
-	fmt.Println("confirmPassword: ", confirmPassword)
 	file, fileHeader, e := r.FormFile("avatar_profile")
 	helper.HaltOn(e)
 	defer file.Close()
@@ -294,6 +241,9 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) {
 	password := r.FormValue("password")
 	db := model.ConnectDatabase()
 	var idUser int = model.GetIdUser(db, username)
+  
+  // Delete old sessions token cookie
+  model.DeleteAllSessionsCookieRelatedToUser(db, idUser)
 
 	model.GetInfoUser(db, idUser)
 

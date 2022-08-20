@@ -44,8 +44,8 @@ func GetSessionCookie(cookieName string, r *http.Request) string {
 }
 
 func Render404PageNotFound(w http.ResponseWriter, r *http.Request) {
-  fmt.Println("Render404PageNotFound")
-  fmt.Fprintln(w, "<p>Render404PageNotFound</p>")
+	fmt.Println("Render404PageNotFound")
+	fmt.Fprintln(w, "<p>Render404PageNotFound</p>")
 }
 
 func handler() {
@@ -55,8 +55,8 @@ func handler() {
 	http.HandleFunc("/signin", controller.HandleSignIn)
 	http.HandleFunc("/signup", controller.HandlerSignup)
 	http.HandleFunc("/logout", controller.LogOut)
-  http.HandleFunc("/*", Render404PageNotFound)
-  // http.NotFound
+	http.HandleFunc("/*", Render404PageNotFound)
+	// http.NotFound
 
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))

@@ -58,6 +58,14 @@ func ConnectDatabase() *sql.DB {
 	return sqliteDatabase
 }
 
+func DeleteAllSessionsCookieRelatedToUser(db *sql.DB, idUser int) {
+	fmt.Println("DeleteAllSessionsCookieRelatedToUser")
+	statement := `delete from sessions where id_user=?`
+	stmt, _ := db.Prepare(statement)
+	result, _ := stmt.Exec(idUser)
+	fmt.Println("Result when delete all sessions cookie related inside the sesions table: ", result)
+}
+
 func DeleteSessionCookie(db *sql.DB, sessionToken string) {
 	fmt.Println("DeleteSessionCookie: ", sessionToken)
 	statement := `delete from sessions where session_token=?`

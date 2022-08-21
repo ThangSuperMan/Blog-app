@@ -27,11 +27,11 @@ type AccessToken struct {
 var LIVETIME_COOKIE int = 1
 
 func HandleSessionsTokenCookieStillNotLogOut(username string) {
-  fmt.Println("HandleSessionsTokenCookieStillNotLogOut") 
-   fmt.Println("Method Post") 
-    db := model.ConnectDatabase()
-    fmt.Println("username: ", username)
-    model.DeleteSessionCookie(db, username)
+	fmt.Println("HandleSessionsTokenCookieStillNotLogOut")
+	fmt.Println("Method Post")
+	db := model.ConnectDatabase()
+	fmt.Println("username: ", username)
+	model.DeleteSessionCookie(db, username)
 }
 
 func GetSessionTokenCookie(cookieName string, r *http.Request) string {
@@ -84,8 +84,9 @@ func LogOut(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 	}
 
-  // fmt.Fprintln(w, "<p>Logged out your account successfully, have a good day :)")
+	// fmt.Fprintln(w, "<p>Logged out your account successfully, have a good day :)")
 	http.SetCookie(w, cookie)
+	fmt.Fprintln(w, "Successfully logout, hope you will came back, see ya.")
 }
 
 func RenderTemplate(templateName string, w http.ResponseWriter, r *http.Request) {
@@ -98,8 +99,8 @@ func RenderTemplate(templateName string, w http.ResponseWriter, r *http.Request)
 	if cookieExists {
 		var sessionToken string = GetSessionTokenCookie(cookieName, r)
 		if sessionToken != "" {
-			db := model.ConnectDatabase ()
-      defer db.Close()
+			db := model.ConnectDatabase()
+			defer db.Close()
 			var idUser int = model.GetIdUserFromSessionsTable(db, sessionToken)
 			var user model.User
 			user = model.GetInfoUser(db, idUser)
@@ -231,7 +232,6 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("r.Method: ", r.Method)
 	e := r.ParseForm()
 	if e != nil {
 		log.Fatal(e)
@@ -241,15 +241,10 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) {
 	password := r.FormValue("password")
 	db := model.ConnectDatabase()
 	var idUser int = model.GetIdUser(db, username)
-  
-  // Delete old sessions token cookie
-  model.DeleteAllSessionsCookieRelatedToUser(db, idUser)
-
+	// Delete old sessions token cookie
+	model.DeleteAllSessionsCookieRelatedToUser(db, idUser)
 	model.GetInfoUser(db, idUser)
-
 	usernameModel, passwordModel := model.GetUsernameAndPasswordOfUser(db, username)
-	fmt.Println("usernameModel: ", usernameModel)
-	fmt.Println("passwordModel: ", passwordModel)
 
 	if usernameModel != "" && passwordModel != "" {
 		fmt.Println("if statement")
@@ -270,13 +265,14 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) {
 				Expires: expiry,
 			})
 
-			fmt.Fprintln(w, "<p>Successfully signin, now have fun and enjoy.</p>")
+			// fmt.Fprintln(w, "<p>Successfully signin, now have fun and enjoy.</p>")
+      tpl, err := template.ParseGlob("./templates/*.html")
+      helper.HaltOn(err)
+      tpl.ExecuteTemplate(w, "signin-successfully.html", nil)
 		} else if username == usernameModel && password != passwordModel {
 			fmt.Fprintln(w, "<p>Username exist but the password was wrong, please make sure that you was typing a correct one.</p>")
 		}
 	} else {
-		fmt.Println("else case")
-		fmt.Println("Sorry but the username you just typed is not exist, please make sure you was typing the correct username.")
 		fmt.Fprintln(w, "<p>Sorry but the username you just typed is not exist, please make sure you was typing the correct username.</p>")
 	}
 }

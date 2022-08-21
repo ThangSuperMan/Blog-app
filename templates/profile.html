@@ -15,7 +15,7 @@
 </head>
 
 <body>
-  <div class="profile-template-overlay"></div>
+  <div class="profile-template-background"></div>
   <div class="profile-template"></div>
   <main>
     <!-- User signed in -->
@@ -71,7 +71,7 @@
                   <input type="text" value="{{ .ProfileName }}" placeholder="Username" id="profile_name" />
                   <div>
                     <i class="fa-solid fa-pencil"></i>
-                    <span class="edit">Edit</span>
+                    <span id="edit_profile_name" class="edit">Edit</span>
                   </div>
                 </div>
               </div>
@@ -91,7 +91,7 @@
                   <input type="password" placeholder="Password" id="password" />
                   <div>
                     <i class="fa-solid fa-pencil"></i>
-                    <span class="edit">Edit</span>
+                    <span id="edit_password" class="edit">Edit</span>
                   </div>
                 </div>
               </div>

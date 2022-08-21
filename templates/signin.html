@@ -5,6 +5,7 @@
   <title>Signin paga</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/static/style.css" />
+  <script type="text/javascript" src="/static/js/signin.js"></script>
 </head>
 
 <body>
@@ -12,13 +13,13 @@
     {{ template "header"}}
     <h2 class="title">Signin page</h1>
       <div class="form-signin">
-        <form action="/signin" method="post">
+        <form class="form" action="/signin" method="post">
           <input type="text" name="username" placeholder="Username" required />
           <br>
-          <input type="password" name="password" placeholder="Password" arequired  />
+          <input type="password" name="password" placeholder="Password" required />
           <br>
           <div>
-            <button type="submit">Submit</button>
+            <button class="form-sbutmit" type="submit">Submit</button>
           </div>
         </form>
       </div>

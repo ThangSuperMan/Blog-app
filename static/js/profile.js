@@ -1,31 +1,48 @@
 function toArray(x) {
   var arr = []
-  for(var i = 0; i < x.length; i++) {
+  for (var i = 0; i < x.length; i++) {
     arr.push(x[i])
   }
 
   return arr
 }
 
+function handleClickButton() {
+  console.log("hhandleClickButton")
+  const profileTemplate = document.querySelector(".profile-template")
+  const profileTemplateOverlay = document.querySelector(".profile-template-overlay")
+  console.log(profileTemplateOverlay )
+  profileTemplateOverlay.classList.add("active")
+  profileTemplate.classList.add("active")
+  profileTemplate.innerHTML = template
+}
+
+function handleMosueDownBodyTag() {
+  console.log("handleMosueEnterBodyTag")
+  const profileTemplate = document.querySelector(".profile-template")
+  const profileTemplateOverlay = document.querySelector(".profile-template-overlay")
+  profileTemplate .classList.remove("active")
+  profileTemplateOverlay.classList.remove("active")
+}
+
+const template = `
+    <form action="/profile/update" method="post">
+      <div class="text-field">
+        <label for="profile_new_name">Type your new profile name</label>
+        <div class="profile-template-content">
+          <input type="text" placeholder="Username" id="profile_new_name" />
+          <button type="submit">Submit</button>
+        </div>
+      </div>
+    </form>
+`
+
 window.addEventListener("DOMContentLoaded", () => {
   const edits = document.getElementsByClassName("edit")
+  let editButtons = toArray(edits)
 
-  // var startTime = performance.now()
-  // sayHi("Ahihi, to day is super good")
-  // var endTime = performance.now()
-  // console.log("startTime: ", startTime)
-  // console.log("endTime: ", endTime)
-  // console.log(`Call to doSomething took ${endTime - startTime} milliseconds`)
+  editButtons.forEach(button => button.addEventListener('click', handleClickButton))
+  document.body.addEventListener("mousedown", handleMosueDownBodyTag)
   
-  var startTime = performance.now()
-  let myArray = toArray(edits)
-  var endTime = performance.now()
-  console.log("myArray: ", myArray)
-  console.log(`Call to doSomething took ${endTime - startTime} milliseconds`)
-
-  var arr = [].slice.call(edits)
-  console.log("myArrray when using the slice: ", arr)
-
-
 })
 

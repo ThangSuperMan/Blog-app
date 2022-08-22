@@ -220,7 +220,40 @@ func HandlerSignup(w http.ResponseWriter, r *http.Request) {
 		db := model.ConnectDatabase()
 		model.AddUser(db, username, password, profileName, avatarName, createdAt, updatedAt)
 		fmt.Fprintln(w, "Successfully signup have fun and ejoy.")
+		tpl, err := template.ParseGlob("./templates/*.html")
+		helper.HaltOn(err)
+		tpl.ExecuteTemplate(w, "signup-successfully.html", nil)
 	}
+}
+
+func HandleEditProfile(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("HandleEditProfile")
+  if r.Method == http.MethodPost {
+    fmt.Println(http.MethodPost)
+    r.ParseForm()
+    profileNewName := r.FormValue("profile_new_name")
+    password := r.FormValue("password")
+    fmt.Println("profileNewName : ", profileNewName )
+    fmt.Println("password : ", password)
+    // db := model.ConnectDatabase()
+    
+    // Get user's id based on the access token cookie in the client browser
+    
+  cookie, err := r.Cookie("my_cookie")
+
+	if err != nil {
+		if err == http.ErrNoCookie {
+			w.WriteHeader(http.StatusUnauthorized)
+        return
+		}
+		w.WriteHeader(http.StatusBadRequest)
+      return
+	}
+
+    // Have cookie
+    fmt.Println("cookie.Value", cookie.Value)  
+    // model.EditProfileNameOfUser(db,)
+  }
 }
 
 func HandleSignIn(w http.ResponseWriter, r *http.Request) {
@@ -266,9 +299,9 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) {
 			})
 
 			// fmt.Fprintln(w, "<p>Successfully signin, now have fun and enjoy.</p>")
-      tpl, err := template.ParseGlob("./templates/*.html")
-      helper.HaltOn(err)
-      tpl.ExecuteTemplate(w, "signin-successfully.html", nil)
+			tpl, err := template.ParseGlob("./templates/*.html")
+			helper.HaltOn(err)
+			tpl.ExecuteTemplate(w, "signin-successfully.html", nil)
 		} else if username == usernameModel && password != passwordModel {
 			fmt.Fprintln(w, "<p>Username exist but the password was wrong, please make sure that you was typing a correct one.</p>")
 		}

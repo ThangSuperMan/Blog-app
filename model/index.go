@@ -58,6 +58,7 @@ func ConnectDatabase() *sql.DB {
 	return sqliteDatabase
 }
 
+// SESSIONS COOKIES
 func DeleteAllSessionsCookieRelatedToUser(db *sql.DB, idUser int) {
 	fmt.Println("DeleteAllSessionsCookieRelatedToUser")
 	statement := `delete from sessions where id_user=?`
@@ -122,6 +123,15 @@ func GetInfoUser(db *sql.DB, idUserParams int) User {
 	}
 
 	return user
+}
+
+// USERS
+func EditProfileNameOfUser(db *sql.DB, idUser int, newProfileUserName string) {
+	fmt.Println("EditProfileNameOFUser")
+	statment := `update users set profile_name=? where id_user=?`
+	stmt, _ := db.Prepare(statment)
+	result, _ := stmt.Exec(idUser, newProfileUserName)
+	fmt.Println("result edit user's profile name record: ", result)
 }
 
 func GetUsernameAndAvatarNameOfUsersTable(db *sql.DB, idUser int) (string, string) {

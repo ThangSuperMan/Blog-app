@@ -64,7 +64,7 @@
         </div>
         <div class="profile-container-content">
           <div>
-            <form method="post">
+            <form action="/user/update_profile" method="post">
               <div class="text-field">
                 <label for="profile_name">Profile name</label>
                 <div class="text-field-wrapper">
@@ -79,10 +79,10 @@
                 <label for="username">Username</label>
                 <div class="text-field-wrapper">
                   <input type="text" value="{{ .Username }}" placeholder="Username" id="username" />
-                  <!-- <div> -->
-                  <!--   <i class="fa-solid fa-pencil"></i> -->
-                  <!--   <span class="edit">Edit</span> -->
-                  <!-- </div> -->
+                  <div>
+                    <i class="fa-solid fa-pencil"></i>
+                    <span class="edit">Edit</span>
+                  </div>
                 </div>
               </div>
               <div class="text-field">

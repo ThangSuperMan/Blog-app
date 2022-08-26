@@ -3,34 +3,25 @@ package controller
 import (
 	"Blog/helper"
 	"Blog/model"
+	"Blog/structs"
 	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/google/uuid"
 )
 
-type AccessToken struct {
-	IsSignedIn  bool
-	Username    string
-	Password    string
-	ProfileName string
-	AvatarName  string
-}
-
 // One hour
 var LIVETIME_COOKIE int = 1
 
 func HandleSessionsTokenCookieStillNotLogOut(username string) {
-	fmt.Println("HandleSessionsTokenCookieStillNotLogOut")
-	fmt.Println("Method Post")
 	db := model.ConnectDatabase()
-	fmt.Println("username: ", username)
 	model.DeleteSessionCookie(db, username)
 }
 
@@ -84,7 +75,6 @@ func LogOut(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 	}
 
-	// fmt.Fprintln(w, "<p>Logged out your account successfully, have a good day :)")
 	http.SetCookie(w, cookie)
 	fmt.Fprintln(w, "Successfully logout, hope you will came back, see ya.")
 }
@@ -102,9 +92,9 @@ func RenderTemplate(templateName string, w http.ResponseWriter, r *http.Request)
 			db := model.ConnectDatabase()
 			defer db.Close()
 			var idUser int = model.GetIdUserFromSessionsTable(db, sessionToken)
-			var user model.User
+			var user structs.User
 			user = model.GetInfoUser(db, idUser)
-			data := AccessToken{
+			data := structs.AccessToken{
 				IsSignedIn:  true,
 				Username:    user.Username,
 				Password:    user.Password,
@@ -121,10 +111,69 @@ func RenderTemplate(templateName string, w http.ResponseWriter, r *http.Request)
 	}
 }
 
+func RenderAddBlogPage(w http.ResponseWriter, r *http.Request) {
+	var cookieExists bool = CheckSessionCookieExists(w, r)
+	cookieName := "my_cookie"
+
+	var sessionTokenCurrentInBrowser string = GetSessionTokenCookie(cookieName, r)
+	fmt.Println("value of cookie: ", sessionTokenCurrentInBrowser)
+  r.ParseForm()
+  idUser := r.FormValue("id_user")
+  fmt.Println("idUser: ", idUser)
+  db := model.ConnectDatabase()
+  idUserInteger, _ := strconv.Atoi(idUser)  
+  accessTokenInDatabase := model.GetAccessToken(db, idUserInteger)
+  fmt.Println("accessToken: ", accessTokenInDatabase )
+
+	// SessionToken != "" => User still did not sign in
+	if r.Method == http.MethodPost && cookieExists && sessionTokenCurrentInBrowser != "" {
+    if sessionTokenCurrentInBrowser == accessTokenInDatabase {
+      fmt.Println("sessionTokenCurrentInBrowser == accessTokenInDatabase")
+      fmt.Println("r.Method == http.MethodPost")
+      fmt.Println("RenderAddBlogPage new")
+      fmt.Fprintln(w, "<p>RenderAddBlogPage</p>")
+    }
+	} else {
+		fmt.Fprintln(w, "<p>sorry, you would like to use this feature you have to sign in first, thank you so much.</p>")
+	}
+}
+
 func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("RenderHomePage")
 	templateName := "index.html"
-	RenderTemplate(templateName, w, r)
+	tpl, err := template.ParseGlob("./templates/*.html")
+	helper.HaltOn(err)
+
+	var cookieExists bool = CheckSessionCookieExists(w, r)
+	cookieName := "my_cookie"
+
+	if cookieExists {
+		var sessionToken string = GetSessionTokenCookie(cookieName, r)
+		if sessionToken != "" {
+			db := model.ConnectDatabase()
+			defer db.Close()
+			var idUser int = model.GetIdUserFromSessionsTable(db, sessionToken)
+			var user structs.User
+			var blogs []structs.Blog = model.ReadAllBlogs(db)
+
+			user = model.GetInfoUser(db, idUser)
+			fmt.Println("user :", user)
+			data := structs.AccessToken{
+				IsSignedIn:  true,
+				Username:    user.Username,
+				Password:    user.Password,
+				ProfileName: user.Profile_name,
+				AvatarName:  user.Avatar_name,
+				Blogs:       blogs,
+			}
+
+			tpl.ExecuteTemplate(w, templateName, data)
+		} else {
+			tpl.ExecuteTemplate(w, templateName, nil)
+		}
+	} else {
+		tpl.ExecuteTemplate(w, templateName, nil)
+	}
 }
 
 func RenderProfilePage(w http.ResponseWriter, r *http.Request) {
@@ -140,14 +189,12 @@ func RenderProfilePage(w http.ResponseWriter, r *http.Request) {
 		if sessionToken != "" {
 			db := model.ConnectDatabase()
 			var idUser int = model.GetIdUserFromSessionsTable(db, sessionToken)
-			// username, avatarName := model.GetUsernameAndAvatarNameOfUsersTable(db, idUser)
-
-			var user model.User
+			var user structs.User
 			user = model.GetInfoUser(db, idUser)
-			fmt.Println("user: ", user)
 
-			data := AccessToken{
+			data := structs.AccessToken{
 				IsSignedIn:  true,
+        Id_user: idUser,
 				Username:    user.Username,
 				ProfileName: user.Profile_name,
 				AvatarName:  user.Avatar_name,
@@ -182,7 +229,6 @@ func HandlerSignup(w http.ResponseWriter, r *http.Request) {
 	// Post method
 	r.ParseForm()
 	r.ParseMultipartForm(10)
-
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 	profileName := r.FormValue("profile_name")
@@ -193,9 +239,7 @@ func HandlerSignup(w http.ResponseWriter, r *http.Request) {
 	file, fileHeader, e := r.FormFile("avatar_profile")
 	helper.HaltOn(e)
 	defer file.Close()
-
 	contentType := fileHeader.Header["Content-Type"][0]
-
 	var osFile *os.File
 	var err error
 	var avatarName string
@@ -226,34 +270,81 @@ func HandlerSignup(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func HandleEditProfileName(w http.ResponseWriter, sessionToken string, profileNewName string, password string) {
+	fmt.Println("EditProfileName")
+	db := model.ConnectDatabase()
+	var idUser int = model.GetIdUserFromSessionsTable(db, sessionToken)
+	username, _ := model.GetUsernameAndAvatarNameOfUsersTable(db, idUser)
+	_, passwordModel := model.GetUsernameAndPasswordOfUser(db, username)
+
+	if password == passwordModel {
+		// Allow user edit info
+		fmt.Println("Allow user edit info")
+		model.UpdateProfileName(db, idUser, profileNewName)
+
+		tpl, err := template.ParseGlob("./templates/*.html")
+		helper.HaltOn(err)
+		tpl.ExecuteTemplate(w, "edit-profile-successfully.html", nil)
+	} else {
+		fmt.Println("Dont allow user edit info")
+		fmt.Fprintln(w, "<p>Sorry but your password did not correct, please make sure that you typed a correct one.</p>")
+	}
+}
+
+func HandleEditPassword(w http.ResponseWriter, sessionToken string, currentPassword string, newPassword string, confirmNewPassword string) {
+	fmt.Println("HandleEditPassword")
+	db := model.ConnectDatabase()
+	var idUser int = model.GetIdUserFromSessionsTable(db, sessionToken)
+	username, _ := model.GetUsernameAndAvatarNameOfUsersTable(db, idUser)
+	_, passwordModel := model.GetUsernameAndPasswordOfUser(db, username)
+
+	if currentPassword != passwordModel {
+		fmt.Println("currentPassword != passwordModel")
+		fmt.Fprintln(w, "<p>Sorry but your current password did not correct, please make sure that you typed a correct one.</p>")
+	} else if newPassword != confirmNewPassword {
+		fmt.Println("newPassword != confirmNewPassword")
+		fmt.Fprintln(w, "<p>Sorry but your new password and confirm new password did not match with each other, please make sure that you typed a similar one.</p>")
+	} else {
+		fmt.Println("every thing was totally correct.")
+		model.UpdatePassword(db, idUser, newPassword)
+		tpl, err := template.ParseGlob("./templates/*.html")
+		helper.HaltOn(err)
+		tpl.ExecuteTemplate(w, "edit-profile-successfully.html", nil)
+	}
+}
+
 func HandleEditProfile(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("HandleEditProfile")
-  if r.Method == http.MethodPost {
-    fmt.Println(http.MethodPost)
-    r.ParseForm()
-    profileNewName := r.FormValue("profile_new_name")
-    password := r.FormValue("password")
-    fmt.Println("profileNewName : ", profileNewName )
-    fmt.Println("password : ", password)
-    // db := model.ConnectDatabase()
-    
-    // Get user's id based on the access token cookie in the client browser
-    
-  cookie, err := r.Cookie("my_cookie")
+	if r.Method == http.MethodPost {
+		r.ParseForm()
+		editProfileName := r.FormValue("edit_profile_name")
+		editPassword := r.FormValue("edit_password")
+		// Get user's id based on the access token cookie in the client browser
+		cookie, err := r.Cookie("my_cookie")
 
-	if err != nil {
-		if err == http.ErrNoCookie {
-			w.WriteHeader(http.StatusUnauthorized)
-        return
+		if err != nil {
+			if err == http.ErrNoCookie {
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			w.WriteHeader(http.StatusBadRequest)
+			return
 		}
-		w.WriteHeader(http.StatusBadRequest)
-      return
-	}
 
-    // Have cookie
-    fmt.Println("cookie.Value", cookie.Value)  
-    // model.EditProfileNameOfUser(db,)
-  }
+		var sessionToken string = cookie.Value
+		if editProfileName != "" {
+			fmt.Println("editProfileName  ")
+			profileNewName := r.FormValue("profile_new_name")
+			password := r.FormValue("password")
+			HandleEditProfileName(w, sessionToken, profileNewName, password)
+		} else if editPassword != "" {
+			fmt.Println("editPassword")
+			currentPassword := r.FormValue("current_password")
+			newPassword := r.FormValue("new_password")
+			confirmNewPassword := r.FormValue("confirm_new_password")
+			HandleEditPassword(w, sessionToken, currentPassword, newPassword, confirmNewPassword)
+		}
+	}
 }
 
 func HandleSignIn(w http.ResponseWriter, r *http.Request) {
@@ -287,18 +378,13 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) {
 
 			expiry := time.Now().Add(1 * time.Hour)
 			createdAt := time.Now().Format("2006-01-02 15:04:05")
-			fmt.Println("username == usernameModel && password == passwordModel")
-			fmt.Println("createdAt: ", createdAt)
-			fmt.Println("expriesAt: ", expiry)
 			model.AddSession(db, sessionToken, expiry, createdAt, idUser)
-
 			http.SetCookie(w, &http.Cookie{
 				Name:    "my_cookie",
 				Value:   sessionToken,
 				Expires: expiry,
 			})
 
-			// fmt.Fprintln(w, "<p>Successfully signin, now have fun and enjoy.</p>")
 			tpl, err := template.ParseGlob("./templates/*.html")
 			helper.HaltOn(err)
 			tpl.ExecuteTemplate(w, "signin-successfully.html", nil)

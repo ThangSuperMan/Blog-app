@@ -64,7 +64,7 @@
         </div>
         <div class="profile-container-content">
           <div>
-            <form method="post">
+            <form action="/add_blog" method="post">
               <div class="text-field">
                 <label for="profile_name">Profile name</label>
                 <div class="text-field-wrapper">
@@ -79,21 +79,24 @@
                 <label for="username">Username</label>
                 <div class="text-field-wrapper">
                   <input type="text" value="{{ .Username }}" placeholder="Username" id="username" />
-                  <!-- <div> -->
-                  <!--   <i class="fa-solid fa-pencil"></i> -->
-                  <!--   <span class="edit">Edit</span> -->
-                  <!-- </div> -->
                 </div>
               </div>
               <div class="text-field">
                 <label for="password">Password</label>
                 <div class="text-field-wrapper">
-                  <input type="password" placeholder="Password" id="password" />
+                  <input type="password" name="password" value="Example password" placeholder="Password"
+                    id="password" />
                   <div>
                     <i class="fa-solid fa-pencil"></i>
                     <span id="edit_password" class="edit">Edit</span>
                   </div>
                 </div>
+              </div>
+              <div class="text-field-wrapper">
+                <span>Add your blog and share it with your friends</span>
+                <!-- Main feature -->
+                <input type="hidden" name="id_user" value="{{.Id_user}}" />
+                <button type="submit" class="add-blog" id="add_blog">Add Blog</button>
               </div>
             </form>
           </div>

@@ -21,14 +21,14 @@
       <div class="menu-list">
         <ul>
           <li class="menu-list-username">
-                <a href="/profile" class="profile">
-                  <span class="profile-username">
-                    {{ .ProfileName }}
-                  </span>
-                  <div class="profile-avatar">
-                    <img src="/static/uploads/images/{{ .AvatarName }}" alt="Avatar profile image" />
-                  </div>
-                </a>
+            <a href="/profile" class="profile">
+              <span class="profile-username">
+                {{ .ProfileName }}
+              </span>
+              <div class="profile-avatar">
+                <img src="/static/uploads/images/{{ .AvatarName }}" alt="Avatar profile image" />
+              </div>
+            </a>
           </li>
           <li>
             <a href="/">Home</a>
@@ -46,6 +46,40 @@
     {{ template "header"}}
     {{ end }}
     <h2 class="title">Homepage</h2>
+    <div class="blogs">
+      {{ range .Blogs }}
+      <div class="blog">
+        <div class="blog-image">
+          <a href="/blog_detail/{{ .Id_blog }}">
+            <img src="/static/uploads/images/1066901785.jpg" alt="Image blog" />
+          </a>
+        </div>
+        <div class="blog-content">
+          <div class="blog-content-title" href="/detail_blog">
+            <a href="/">{{ .Title }}</a>
+          </div>
+          <div div class="blog-content-body">
+            <p>{{ .Body }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="blog">
+        <div class="blog-image">
+          <a href="/blog_detail/{{ .Id_blog }}">
+            <img src="/static/uploads/images/1066901785.jpg" alt="Image blog" />
+          </a>
+        </div>
+        <div class="blog-content">
+          <div class="blog-content-title" href="/detail_blog">
+            <a href="/">{{ .Title }}</a>
+          </div>
+          <div div class="blog-content-body">
+            <p>{{ .Body }}</p>
+          </div>
+        </div>
+      </div>
+      {{ end }}
+    </div>
   </main>
 </body>
 

@@ -5,6 +5,7 @@
   <title>Homepage</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
 
 <body>
@@ -25,7 +26,7 @@
                 {{ .ProfileName }}
               </span>
               <div class="profile-avatar">
-                <img src="/static/uploads/images/users/{{ .AvatarName }}" alt="Avatar profile image" />
+                <img src="/static/uploads/images/{{ .AvatarName }}" alt="Avatar profile image" />
               </div>
             </a>
           </li>
@@ -44,7 +45,22 @@
     {{ else }}
     {{ template "header"}}
     {{ end }}
-    <h2 class="title">About page</h2>
+    <h2 class="title">Add blog</h2>
+      <div class="form-signin">
+        <form class="form" action="/add_single_blog" method="post" enctype="multipart/form-data">
+          <input type="text" name="title" placeholder="Title blog" required />
+          <br>
+          <input type="file" name="image_blog" placeholder="Avatar profile" />
+          <br>
+          <textarea id="content" name="content" rows="4" cols="30">
+            Content blog example
+          </textarea>
+          <br>
+          <div>
+            <button class="form-sbutmit" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
   </main>
 </body>
 

@@ -1,7 +1,6 @@
 console.log("sign in js")
 
-function handleSubmitForm(e) {
-  // e.preventDefault()
+function handleSubmitForm() {
   console.log("handleSubmitForm")
 }
 

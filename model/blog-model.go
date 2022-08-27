@@ -7,7 +7,6 @@ import (
 )
 
 func ReadAllBlogs(db *sql.DB) []structs.Blog {
-	fmt.Println("ReadAllBlogs")
 	var id int
 	var title string
 	var body string
@@ -15,7 +14,6 @@ func ReadAllBlogs(db *sql.DB) []structs.Blog {
   var updatedAt string
   var idComment string
 	var idUser int
-	fmt.Println("ReadAllBlogs")
 	statement := `select * from blogs`
 	rows, err := db.Query(statement)
 

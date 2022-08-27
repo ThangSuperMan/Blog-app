@@ -111,28 +111,46 @@ func RenderTemplate(templateName string, w http.ResponseWriter, r *http.Request)
 	}
 }
 
+func HandleAddSingleBlog(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("HandleAddSingleBlog")
+	if r.Method == http.MethodGet {
+		fmt.Println("http.MethodGet: ")
+		return
+	}
+
+	fmt.Println("http.MethodPost: ")
+	r.ParseForm()
+	r.ParseMultipartForm(10)
+	title := r.FormValue("title")
+	content := r.FormValue("content")
+	fmt.Println("title: ", title)
+	fmt.Println("content : ", content)
+
+}
+
 func RenderAddBlogPage(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("RenderAddBlogPage")
+	if r.Method == http.MethodGet {
+		fmt.Println("http.MethodGet: ")
+		return
+	}
+
 	var cookieExists bool = CheckSessionCookieExists(w, r)
 	cookieName := "my_cookie"
-
 	var sessionTokenCurrentInBrowser string = GetSessionTokenCookie(cookieName, r)
-	fmt.Println("value of cookie: ", sessionTokenCurrentInBrowser)
-  r.ParseForm()
-  idUser := r.FormValue("id_user")
-  fmt.Println("idUser: ", idUser)
-  db := model.ConnectDatabase()
-  idUserInteger, _ := strconv.Atoi(idUser)  
-  accessTokenInDatabase := model.GetAccessToken(db, idUserInteger)
-  fmt.Println("accessToken: ", accessTokenInDatabase )
+	r.ParseForm()
+	idUser := r.FormValue("id_user")
+	db := model.ConnectDatabase()
+	idUserInteger, _ := strconv.Atoi(idUser)
+	accessTokenInDatabase := model.GetAccessToken(db, idUserInteger)
+	fmt.Println("accessToken: ", accessTokenInDatabase)
 
 	// SessionToken != "" => User still did not sign in
 	if r.Method == http.MethodPost && cookieExists && sessionTokenCurrentInBrowser != "" {
-    if sessionTokenCurrentInBrowser == accessTokenInDatabase {
-      fmt.Println("sessionTokenCurrentInBrowser == accessTokenInDatabase")
-      fmt.Println("r.Method == http.MethodPost")
-      fmt.Println("RenderAddBlogPage new")
-      fmt.Fprintln(w, "<p>RenderAddBlogPage</p>")
-    }
+		if sessionTokenCurrentInBrowser == accessTokenInDatabase {
+			templateName := "add-blog.html"
+			RenderTemplate(templateName, w, r)
+		}
 	} else {
 		fmt.Fprintln(w, "<p>sorry, you would like to use this feature you have to sign in first, thank you so much.</p>")
 	}
@@ -157,7 +175,6 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 			var blogs []structs.Blog = model.ReadAllBlogs(db)
 
 			user = model.GetInfoUser(db, idUser)
-			fmt.Println("user :", user)
 			data := structs.AccessToken{
 				IsSignedIn:  true,
 				Username:    user.Username,
@@ -194,7 +211,7 @@ func RenderProfilePage(w http.ResponseWriter, r *http.Request) {
 
 			data := structs.AccessToken{
 				IsSignedIn:  true,
-        Id_user: idUser,
+				Id_user:     idUser,
 				Username:    user.Username,
 				ProfileName: user.Profile_name,
 				AvatarName:  user.Avatar_name,
@@ -215,8 +232,37 @@ func RenderAboutPage(w http.ResponseWriter, r *http.Request) {
 	RenderTemplate(templateName, w, r)
 }
 
+func UploadFile(nameInputFile string, locationUpload string, r *http.Request) string {
+	file, fileHeader, e := r.FormFile(nameInputFile)
+	helper.HaltOn(e)
+	defer file.Close()
+	contentType := fileHeader.Header["Content-Type"][0]
+	var osFile *os.File
+	var err error
+	var imageName string
+
+	if contentType == "image/jpeg" {
+		osFile, err = ioutil.TempFile(locationUpload, "*.jpg")
+		imageName = strings.TrimLeft(osFile.Name(), locationUpload)
+	} else if contentType == "image/png" {
+		osFile, err = ioutil.TempFile(locationUpload, "*.png")
+		imageName = strings.TrimLeft(osFile.Name(), locationUpload)
+	}
+
+	defer osFile.Close()
+
+	fileBytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Println(err)
+    return ""
+	}
+	osFile.Write(fileBytes)
+
+  return imageName
+}
+
 func HandlerSignup(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("HandlerSignup")
+fmt.Println("HandlerSignup")
 
 	if r.Method == http.MethodGet {
 		tpl, e := template.ParseGlob("./templates/*.html")
@@ -236,37 +282,40 @@ func HandlerSignup(w http.ResponseWriter, r *http.Request) {
 	createdAt := time.Now().Format("2006-01-02 15:04:05")
 	updatedAt := ""
 
-	file, fileHeader, e := r.FormFile("avatar_profile")
-	helper.HaltOn(e)
-	defer file.Close()
-	contentType := fileHeader.Header["Content-Type"][0]
-	var osFile *os.File
-	var err error
-	var avatarName string
+	// file, fileHeader, e := r.FormFile("avatar_profile")
+	// helper.HaltOn(e)
+	// defer file.Close()
+	// contentType := fileHeader.Header["Content-Type"][0]
+	// var osFile *os.File
+	// var err error
+	// var avatarName string
+ //
+	// if contentType == "image/jpeg" {
+	// 	osFile, err = ioutil.TempFile("static/uploads/images", "*.jpg")
+	// 	avatarName = strings.TrimLeft(osFile.Name(), "static/uploads/images")
+	// } else if contentType == "image/png" {
+	// 	osFile, err = ioutil.TempFile("static/uploads/images", "*.png")
+	// 	avatarName = strings.TrimLeft(osFile.Name(), "static/uploads/images/")
+	// }
+ //
+	// defer osFile.Close()
+ //
+	// fileBytes, err := ioutil.ReadAll(file)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// osFile.Write(fileBytes)
 
-	if contentType == "image/jpeg" {
-		osFile, err = ioutil.TempFile("static/uploads/images", "*.jpg")
-		avatarName = strings.TrimLeft(osFile.Name(), "static/uploads/images")
-	} else if contentType == "image/png" {
-		osFile, err = ioutil.TempFile("static/uploads/images", "*.png")
-		avatarName = strings.TrimLeft(osFile.Name(), "static/uploads/images/")
-	}
-
-	defer osFile.Close()
-
-	fileBytes, err := ioutil.ReadAll(file)
-	if err != nil {
-		fmt.Println(err)
-	}
-	osFile.Write(fileBytes)
+  locationUpload := "static/uploads/images/users/"
+  avatarName := UploadFile("avatar_profile", locationUpload, r) 
+  fmt.Println("avatarName: ", avatarName)
 
 	if password == confirmPassword {
 		db := model.ConnectDatabase()
 		model.AddUser(db, username, password, profileName, avatarName, createdAt, updatedAt)
-		fmt.Fprintln(w, "Successfully signup have fun and ejoy.")
 		tpl, err := template.ParseGlob("./templates/*.html")
 		helper.HaltOn(err)
-		tpl.ExecuteTemplate(w, "signup-successfully.html", nil)
+    fmt.Println(tpl.ExecuteTemplate(w, "signup-successfully.html", nil))
 	}
 }
 

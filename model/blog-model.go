@@ -6,13 +6,21 @@ import (
 	"fmt"
 )
 
+func AddBlog(db *sql.DB, title string, body string, imageName, createdAt string, idUser int) {
+	fmt.Println("AddBlog model")
+	statment := `insert into blogs(title, body, image_name, created_at, id_user) values (?, ?, ?, ?, ?)`
+	stmt, _ := db.Prepare(statment)
+	result, _ := stmt.Exec(title, body, imageName, createdAt, idUser)
+	fmt.Println("result add blog record: ", result)
+}
+
 func ReadAllBlogs(db *sql.DB) []structs.Blog {
 	var id int
 	var title string
 	var body string
 	var createdAt string
-  var updatedAt string
-  var idComment string
+	var updatedAt string
+	var idComment string
 	var idUser int
 	statement := `select * from blogs`
 	rows, err := db.Query(statement)

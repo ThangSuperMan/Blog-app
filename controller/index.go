@@ -96,6 +96,7 @@ func RenderTemplate(templateName string, w http.ResponseWriter, r *http.Request)
 			user = model.GetInfoUser(db, idUser)
 			data := structs.AccessToken{
 				IsSignedIn:  true,
+        Id_user: user.Id_user,
 				Username:    user.Username,
 				Password:    user.Password,
 				ProfileName: user.Profile_name,
@@ -118,23 +119,30 @@ func HandleAddSingleBlog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("http.MethodPost: ")
+	fmt.Println("http.MethodPost")
 	r.ParseForm()
 	r.ParseMultipartForm(10)
 	title := r.FormValue("title")
-	content := r.FormValue("content")
-	fmt.Println("title: ", title)
-	fmt.Println("content : ", content)
+	body := r.FormValue("content")
+  idUser := r.FormValue("id_user") 
+  idUserTypeInt, _ := strconv.Atoi(idUser) 
+  nameInputfile := "image_blog" 
+  locationUpload := "static/uploads/images/blogs/"
+  var nameBlogImage string = UploadFile(nameInputfile, locationUpload, r)
+	createdAt := time.Now().Format("2006-01-02 15:04:05")
+  db := model.ConnectDatabase()
 
+  model.AddBlog(db, title, body, nameBlogImage, createdAt, idUserTypeInt) 
 }
 
 func RenderAddBlogPage(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("RenderAddBlogPage")
 	if r.Method == http.MethodGet {
-		fmt.Println("http.MethodGet: ")
+		fmt.Println("Get method")
 		return
 	}
 
+	// Post method
 	var cookieExists bool = CheckSessionCookieExists(w, r)
 	cookieName := "my_cookie"
 	var sessionTokenCurrentInBrowser string = GetSessionTokenCookie(cookieName, r)
@@ -254,15 +262,15 @@ func UploadFile(nameInputFile string, locationUpload string, r *http.Request) st
 	fileBytes, err := ioutil.ReadAll(file)
 	if err != nil {
 		fmt.Println(err)
-    return ""
+		return ""
 	}
 	osFile.Write(fileBytes)
 
-  return imageName
+	return imageName
 }
 
 func HandlerSignup(w http.ResponseWriter, r *http.Request) {
-fmt.Println("HandlerSignup")
+	fmt.Println("HandlerSignup")
 
 	if r.Method == http.MethodGet {
 		tpl, e := template.ParseGlob("./templates/*.html")
@@ -282,40 +290,15 @@ fmt.Println("HandlerSignup")
 	createdAt := time.Now().Format("2006-01-02 15:04:05")
 	updatedAt := ""
 
-	// file, fileHeader, e := r.FormFile("avatar_profile")
-	// helper.HaltOn(e)
-	// defer file.Close()
-	// contentType := fileHeader.Header["Content-Type"][0]
-	// var osFile *os.File
-	// var err error
-	// var avatarName string
- //
-	// if contentType == "image/jpeg" {
-	// 	osFile, err = ioutil.TempFile("static/uploads/images", "*.jpg")
-	// 	avatarName = strings.TrimLeft(osFile.Name(), "static/uploads/images")
-	// } else if contentType == "image/png" {
-	// 	osFile, err = ioutil.TempFile("static/uploads/images", "*.png")
-	// 	avatarName = strings.TrimLeft(osFile.Name(), "static/uploads/images/")
-	// }
- //
-	// defer osFile.Close()
- //
-	// fileBytes, err := ioutil.ReadAll(file)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	// osFile.Write(fileBytes)
-
-  locationUpload := "static/uploads/images/users/"
-  avatarName := UploadFile("avatar_profile", locationUpload, r) 
-  fmt.Println("avatarName: ", avatarName)
+	locationUpload := "static/uploads/images/users/"
+	avatarName := UploadFile("avatar_profile", locationUpload, r)
 
 	if password == confirmPassword {
 		db := model.ConnectDatabase()
 		model.AddUser(db, username, password, profileName, avatarName, createdAt, updatedAt)
 		tpl, err := template.ParseGlob("./templates/*.html")
 		helper.HaltOn(err)
-    fmt.Println(tpl.ExecuteTemplate(w, "signup-successfully.html", nil))
+		fmt.Println(tpl.ExecuteTemplate(w, "signup-successfully.html", nil))
 	}
 }
 

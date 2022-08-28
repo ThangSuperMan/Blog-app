@@ -7,9 +7,8 @@ import (
 )
 
 func createTables(db *sql.DB) {
+	// PRAGMA foreign_keys = on;
 	var statement string = `
-    PRAGMA foreign_keys = ON;
-
 		create table if not exists "users" (
 		"id_user"     integer not null primary key autoincrement,
     "username"	    text not null,
@@ -36,6 +35,7 @@ func createTables(db *sql.DB) {
     "id_blog"         integer not null primary key autoincrement,
     "title"           text not null,
     "body"            text not null,
+    "image_name"      text not null,
     "created_at"      text not null,
     "updated_at"      text,
     "id_comment"      integer, 
@@ -68,6 +68,6 @@ func InitModel() {
 }
 
 func ConnectDatabase() *sql.DB {
-	sqliteDatabase, _ := sql.Open("sqlite3", "./my_database.db")
+	sqliteDatabase, _ := sql.Open("sqlite3", "./my_database.db?_foreign_keys=on")
 	return sqliteDatabase
 }

@@ -15,12 +15,14 @@ func AddBlog(db *sql.DB, title string, body string, imageName, createdAt string,
 }
 
 func ReadAllBlogs(db *sql.DB) []structs.Blog {
-	var id int
+	fmt.Println("ReadAllBlogs")
+	var idBlog int
 	var title string
 	var body string
+	var imageName string
 	var createdAt string
-	var updatedAt string
-	var idComment string
+	var updatedAt sql.NullString
+	var idComment sql.NullInt64
 	var idUser int
 	statement := `select * from blogs`
 	rows, err := db.Query(statement)
@@ -31,12 +33,16 @@ func ReadAllBlogs(db *sql.DB) []structs.Blog {
 
 	blogs := make([]structs.Blog, 0)
 	for rows.Next() {
-		rows.Scan(&id, &title, &body, &createdAt, &updatedAt, &idUser, &idComment)
+		err := rows.Scan(&idBlog, &title, &body, &imageName, &createdAt, &updatedAt, &idComment, &idUser)
+		if err != nil {
+			fmt.Println("Error when scan data here: ", err)
+		}
 
 		blog := structs.Blog{
-			Id_blog:    id,
+			Id_blog:    idBlog,
 			Title:      title,
 			Body:       body,
+			Image_name: imageName,
 			Created_at: createdAt,
 			Id_user:    idUser,
 		}

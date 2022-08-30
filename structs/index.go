@@ -16,6 +16,7 @@ type Blog struct {
 	Body       string
 	Updated_at string
 	Created_at string
+	Image_name string
 	// Number_of_likes int
 	Id_comment int
 	Id_user    int
@@ -24,7 +25,7 @@ type Blog struct {
 // Just for render blogs with homepage template
 type AccessToken struct {
 	IsSignedIn  bool
-  Id_user     int
+	Id_user     int
 	Username    string
 	Password    string
 	ProfileName string

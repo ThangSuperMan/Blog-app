@@ -96,7 +96,7 @@ func RenderTemplate(templateName string, w http.ResponseWriter, r *http.Request)
 			user = model.GetInfoUser(db, idUser)
 			data := structs.AccessToken{
 				IsSignedIn:  true,
-        Id_user: user.Id_user,
+				Id_user:     user.Id_user,
 				Username:    user.Username,
 				Password:    user.Password,
 				ProfileName: user.Profile_name,
@@ -124,15 +124,18 @@ func HandleAddSingleBlog(w http.ResponseWriter, r *http.Request) {
 	r.ParseMultipartForm(10)
 	title := r.FormValue("title")
 	body := r.FormValue("content")
-  idUser := r.FormValue("id_user") 
-  idUserTypeInt, _ := strconv.Atoi(idUser) 
-  nameInputfile := "image_blog" 
-  locationUpload := "static/uploads/images/blogs/"
-  var nameBlogImage string = UploadFile(nameInputfile, locationUpload, r)
+	idUser := r.FormValue("id_user")
+	idUserTypeInt, _ := strconv.Atoi(idUser)
+	nameInputfile := "image_blog"
+	locationUpload := "static/uploads/images/blogs/"
+	var nameBlogImage string = UploadFile(nameInputfile, locationUpload, r)
 	createdAt := time.Now().Format("2006-01-02 15:04:05")
-  db := model.ConnectDatabase()
 
-  model.AddBlog(db, title, body, nameBlogImage, createdAt, idUserTypeInt) 
+	db := model.ConnectDatabase()
+	model.AddBlog(db, title, body, nameBlogImage, createdAt, idUserTypeInt)
+	tpl, err := template.ParseGlob("./templates/*.html")
+	helper.HaltOn(err)
+	tpl.ExecuteTemplate(w, "add-blog-successfully.html", nil)
 }
 
 func RenderAddBlogPage(w http.ResponseWriter, r *http.Request) {
@@ -182,6 +185,16 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 			var user structs.User
 			var blogs []structs.Blog = model.ReadAllBlogs(db)
 
+			// // Get info user bashed on the id of user
+			// for indexBlog, blog := range blogs {
+			// 	fmt.Println("indexBlog: ", indexBlog)
+			// 	fmt.Println("blog.Title: ", blog.Title)
+			// 	fmt.Println("blog.Id_user: ", blog.Id_user)
+			// 	db := model.ConnectDatabase()
+			// 	user := model.GetInfoUser(db, blog.Id_user)
+			// 	fmt.Println("user: ", user)
+			// }
+   //
 			user = model.GetInfoUser(db, idUser)
 			data := structs.AccessToken{
 				IsSignedIn:  true,
@@ -194,10 +207,22 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 
 			tpl.ExecuteTemplate(w, templateName, data)
 		} else {
-			tpl.ExecuteTemplate(w, templateName, nil)
+      db := model.ConnectDatabase()
+			var blogs []structs.Blog = model.ReadAllBlogs(db)
+      data := structs.AccessToken {
+				Blogs: blogs,
+      }
+
+			tpl.ExecuteTemplate(w, templateName, data)
 		}
 	} else {
-		tpl.ExecuteTemplate(w, templateName, nil)
+      db := model.ConnectDatabase()
+			var blogs []structs.Blog = model.ReadAllBlogs(db)
+      data := structs.AccessToken {
+				Blogs: blogs,
+      }
+
+	    tpl.ExecuteTemplate(w, templateName, data)
 	}
 }
 
@@ -235,12 +260,12 @@ func RenderProfilePage(w http.ResponseWriter, r *http.Request) {
 }
 
 func RenderAboutPage(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("RenderAboutPage")
 	templateName := "about.html"
 	RenderTemplate(templateName, w, r)
 }
 
 func UploadFile(nameInputFile string, locationUpload string, r *http.Request) string {
+  fmt.Println("UploadFile")
 	file, fileHeader, e := r.FormFile(nameInputFile)
 	helper.HaltOn(e)
 	defer file.Close()

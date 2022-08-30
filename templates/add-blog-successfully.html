@@ -11,7 +11,7 @@
       var count = span.textContent - 1;
       span.textContent = count;
       if (count <= 0) {
-        window.location.replace("http://localhost:3000/");
+        window.location.replace("http://localhost:3000/profile");
       }
     }, 1000);
 
@@ -20,13 +20,13 @@
 
 <body>
   <main>
-    <h2 style="text-align: center;" class="title">Sign in successfully</h1>
+    <h2 style="text-align: center;" class="title">Add your blog successfully</h1>
       <div style="padding: 4px 32px; 
         text-align: center;
         background-color: var(--bg-profile);
         border-radius: 5px;
         ">
-        <span>You will be redirect to the hompage after: </span>
+        <span>You will be redirect to the profile page after: </span>
         <span id="counter">3</span>
         <span id="seconds">s</span>
       </div>

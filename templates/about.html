@@ -10,7 +10,7 @@
 <body>
   <main>
     <!-- User signed in -->
-    {{ if .IsSignedIn }}
+    {{ if .Is_signed_in }}
     <header>
       <div class="menu-logo">
         <a href="/">
@@ -22,10 +22,10 @@
           <li class="menu-list-username">
             <a href="/profile" class="profile">
               <span class="profile-username">
-                {{ .ProfileName }}
+                {{ .Profile_name }}
               </span>
               <div class="profile-avatar">
-                <img src="/static/uploads/images/users/{{ .AvatarName }}" alt="Avatar profile image" />
+                <img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Avatar profile image" />
               </div>
             </a>
           </li>

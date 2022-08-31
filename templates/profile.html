@@ -19,7 +19,7 @@
   <div class="profile-template"></div>
   <main>
     <!-- User signed in -->
-    {{ if .IsSignedIn }}
+    {{ if .Is_signed_in }}
     <header>
       <div class="menu-logo">
         <a href="/">
@@ -31,10 +31,10 @@
           <li class="menu-list-username">
             <a href="/profile" class="profile">
               <span class="profile-username">
-                {{ .ProfileName }}
+                {{ .Profile_name }}
               </span>
               <div class="profile-avatar">
-                <img src="/static/uploads/images/users/{{ .AvatarName }}" alt="Avatar profile image" />
+                <img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Avatar profile image" />
               </div>
             </a>
           </li>
@@ -58,8 +58,8 @@
       <div>
         <div class="profile-container-top">
           <div>
-            <img src="/static/uploads/images/users/{{ .AvatarName }}" />
-            <h3>{{ .ProfileName }}</h3>
+            <img src="/static/uploads/images/users/{{ .Avatar_name }}" />
+            <h3>{{ .Profile_name }}</h3>
           </div>
         </div>
         <div class="profile-container-content">
@@ -68,7 +68,7 @@
               <div class="text-field">
                 <label for="profile_name">Profile name</label>
                 <div class="text-field-wrapper">
-                  <input type="text" value="{{ .ProfileName }}" placeholder="Username" id="profile_name" />
+                  <input type="text" value="{{ .Profile_name }}" placeholder="Username" id="profile_name" />
                   <div>
                     <i class="fa-solid fa-pencil"></i>
                     <span id="edit_profile_name" class="edit">Edit</span>
@@ -95,7 +95,7 @@
               <div class="text-field-wrapper">
                 <span>Add your blog and share it with your friends</span>
                 <!-- Main feature -->
-                <input type="hidden" name="id_user" value="{{.Id_user}}" />
+                <input type="hidden" name="id_user" value="{{ .Id_user }}" />
                 <button type="submit" class="add-blog" id="add_blog">Add Blog</button>
               </div>
             </form>

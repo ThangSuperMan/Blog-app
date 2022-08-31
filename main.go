@@ -25,7 +25,7 @@ func handler() {
 func main() {
 	model.InitModel()
 	handler()
-	port := ":3003"
+	port := ":3002"
 	fmt.Println("Listenning on the port", port)
 	http.ListenAndServe(port, nil)
 }

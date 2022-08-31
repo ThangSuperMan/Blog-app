@@ -10,8 +10,10 @@
 
 <body>
   <main>
+    {{ $blogs := .Blogs}}
+    {{ $smallInfoUsersOwnBlogs := .Small_info_user_own_blogs }}
     <!-- User signed in -->
-    {{ if .IsSignedIn }}
+    {{ if .Is_signed_in }}
     <header>
       <div class="menu-logo">
         <a href="/">
@@ -23,10 +25,10 @@
           <li class="menu-list-username">
             <a href="/profile" class="profile">
               <span class="profile-username">
-                {{ .ProfileName }}
+                {{ .Profile_name }}
               </span>
               <div class="profile-avatar">
-                <img src="/static/uploads/images/users/{{ .AvatarName }}" alt="Avatar profile image" />
+                <img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Avatar profile image" />
               </div>
             </a>
           </li>
@@ -47,7 +49,8 @@
     {{ end }}
     <h2 class="title">Homepage</h2>
     <div class="blogs">
-      {{ range .Blogs }}
+      {{ range $blog := $blogs }}
+      {{ $idUserOwnBlog := .Id_user}}
       <div class="blog">
         <div class="blog-image">
           <a href="/blog_detail/{{ .Id_blog }}">
@@ -56,22 +59,41 @@
         </div>
         <div class="blog-content">
           <div class="blog-content-title" href="/detail_blog">
-            <a style="
-               background: lightblue; 
-               overflow: hidden;
-               -webkit-line-clamp: 2;
-               -webkit-box-orient: vertical;
-               display: -webkit-box; 
-               "
-                href="/">{{ .Title }}</a>
+            <a>{{ .Title }}</a>
           </div>
-          <!-- Display the info of author of this blog -->
           <div div class="blog-content-body">
             <p>{{ .Body }}</p>
           </div>
+          <!-- Display the info of author of this blog -->
+          <!-- New -->
+          {{ range $smallInfo := $smallInfoUsersOwnBlogs }}
+          {{ if eq $idUserOwnBlog .Id_user}}
+          <div class="blog-author">
+            <img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Image author own blog" />
+            <span>Author: {{ .Profile_name }}</span>
+          </div>
+          {{ end }}
+          {{ end }}
+          <!-- New -->
+        </div>
+      </div>
+
+
+      {{ end }}
+      <!-- New -->
+
+
+      {{ range $smallInfo := $smallInfoUsersOwnBlogs }}
+      <div class="small-info-user">
+        <div>
+          <p>Id user is: {{ .Id_user }}</p>
+          <p>{{ .Profile_name }}</p>
+          <p>{{ .Avatar_name }}</p>
         </div>
       </div>
       {{ end }}
+
+      <!-- New -->
     </div>
   </main>
   <footer class="footer">Footer</footer>

@@ -122,12 +122,25 @@ form button {
   margin-inline: auto;
   display: grid;
   grid-template-columns: calc(33.34% - 16.67px) calc(33.34% - 16.67px) calc(33.34% - 16.67px);
-  /* grid-template-columns: repeat(); */
   gap: 25px;
 }
 
 .blog {
   border: 1px solid var(--border-color);
+}
+
+.blog-author {
+  background-color: lightblue;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.blog-author img {
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  object-fit: cover;
 }
 
 .blog-content {
@@ -155,7 +168,7 @@ form button {
   /* display: inline-block; */
   /* background: red; */
   display: -webkit-box; 
-  background: lightblue; 
+  /* background: lightblue;  */
   overflow: hidden;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -174,6 +187,7 @@ form button {
   font-size: 14px;
   line-height: 16px;
   color: var(--secondary-text-color);
+  font-family: -apple-system,  sans-serif;
 }
 
 .footer {

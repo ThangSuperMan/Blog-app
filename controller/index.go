@@ -95,12 +95,12 @@ func RenderTemplate(templateName string, w http.ResponseWriter, r *http.Request)
 			var user structs.User
 			user = model.GetInfoUser(db, idUser)
 			data := structs.AccessToken{
-				IsSignedIn:  true,
-				Id_user:     user.Id_user,
-				Username:    user.Username,
-				Password:    user.Password,
-				ProfileName: user.Profile_name,
-				AvatarName:  user.Avatar_name,
+				Is_signed_in: true,
+				Id_user:      user.Id_user,
+				Username:     user.Username,
+				Password:     user.Password,
+				Profile_name: user.Profile_name,
+				Avatar_name:  user.Avatar_name,
 			}
 
 			tpl.ExecuteTemplate(w, templateName, data)
@@ -182,47 +182,45 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 			db := model.ConnectDatabase()
 			defer db.Close()
 			var idUser int = model.GetIdUserFromSessionsTable(db, sessionToken)
+      var blogs []structs.Blog = model.ReadAllBlogs(db)
 			var user structs.User
-			var blogs []structs.Blog = model.ReadAllBlogs(db)
-
-			// // Get info user bashed on the id of user
-			// for indexBlog, blog := range blogs {
-			// 	fmt.Println("indexBlog: ", indexBlog)
-			// 	fmt.Println("blog.Title: ", blog.Title)
-			// 	fmt.Println("blog.Id_user: ", blog.Id_user)
-			// 	db := model.ConnectDatabase()
-			// 	user := model.GetInfoUser(db, blog.Id_user)
-			// 	fmt.Println("user: ", user)
-			// }
-   //
 			user = model.GetInfoUser(db, idUser)
+			var smallInfoUsersOwnBlogs []structs.SmallInfoUser = model.GetAllSmallInfoUsers(db)
+      fmt.Println("smallInfoUsersOwnBlogs: ", smallInfoUsersOwnBlogs)
 			data := structs.AccessToken{
-				IsSignedIn:  true,
-				Username:    user.Username,
-				Password:    user.Password,
-				ProfileName: user.Profile_name,
-				AvatarName:  user.Avatar_name,
-				Blogs:       blogs,
+				Is_signed_in:              true,
+				Username:                  user.Username,
+				Password:                  user.Password,
+				Profile_name:              user.Profile_name,
+				Avatar_name:               user.Avatar_name,
+				Blogs:                     blogs,
+				Small_info_user_own_blogs: smallInfoUsersOwnBlogs,
 			}
 
 			tpl.ExecuteTemplate(w, templateName, data)
 		} else {
-      db := model.ConnectDatabase()
+			db := model.ConnectDatabase()
 			var blogs []structs.Blog = model.ReadAllBlogs(db)
-      data := structs.AccessToken {
-				Blogs: blogs,
-      }
+			var smallInfoUsersOwnBlogs []structs.SmallInfoUser = model.GetAllSmallInfoUsers(db)
+      fmt.Println("smallInfoUsersOwnBlogs: ", smallInfoUsersOwnBlogs)
+			data := structs.AccessToken{
+				Blogs:                     blogs,
+				Small_info_user_own_blogs: smallInfoUsersOwnBlogs,
+			}
 
 			tpl.ExecuteTemplate(w, templateName, data)
 		}
 	} else {
-      db := model.ConnectDatabase()
-			var blogs []structs.Blog = model.ReadAllBlogs(db)
-      data := structs.AccessToken {
-				Blogs: blogs,
-      }
+		db := model.ConnectDatabase()
+		var blogs []structs.Blog = model.ReadAllBlogs(db)
+    var smallInfoUsersOwnBlogs []structs.SmallInfoUser = model.GetAllSmallInfoUsers(db)
+    fmt.Println("smallInfoUsersOwnBlogs: ", smallInfoUsersOwnBlogs)
+		data := structs.AccessToken{
+			Blogs:                     blogs,
+			Small_info_user_own_blogs: smallInfoUsersOwnBlogs,
+		}
 
-	    tpl.ExecuteTemplate(w, templateName, data)
+		tpl.ExecuteTemplate(w, templateName, data)
 	}
 }
 
@@ -235,6 +233,7 @@ func RenderProfilePage(w http.ResponseWriter, r *http.Request) {
 	cookieName := "my_cookie"
 
 	if cookieExists {
+    fmt.Println("cookieExists: ", cookieExists)
 		var sessionToken string = GetSessionTokenCookie(cookieName, r)
 		if sessionToken != "" {
 			db := model.ConnectDatabase()
@@ -243,11 +242,11 @@ func RenderProfilePage(w http.ResponseWriter, r *http.Request) {
 			user = model.GetInfoUser(db, idUser)
 
 			data := structs.AccessToken{
-				IsSignedIn:  true,
-				Id_user:     idUser,
-				Username:    user.Username,
-				ProfileName: user.Profile_name,
-				AvatarName:  user.Avatar_name,
+				Is_signed_in: true,
+				Id_user:      idUser,
+				Username:     user.Username,
+				Profile_name: user.Profile_name,
+				Avatar_name:  user.Avatar_name,
 			}
 
 			tpl.ExecuteTemplate(w, "profile.html", data)
@@ -265,7 +264,7 @@ func RenderAboutPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func UploadFile(nameInputFile string, locationUpload string, r *http.Request) string {
-  fmt.Println("UploadFile")
+	fmt.Println("UploadFile")
 	file, fileHeader, e := r.FormFile(nameInputFile)
 	helper.HaltOn(e)
 	defer file.Close()

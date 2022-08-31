@@ -7,6 +7,36 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+func GetAllSmallInfoUsers(db *sql.DB) []structs.SmallInfoUser {
+	fmt.Println("GetAllSmallInfoUsers")
+  var idUser int
+  var profileName string 
+  var avatarName string
+  statment := `select id_user, profile_name, avatar_name  from users`
+  rows, err := db.Query(statment)
+
+  if err != nil {
+    fmt.Println("Error when get all user: ", err)
+  }
+
+  users := make([]structs.SmallInfoUser, 0)
+  for rows.Next() {
+    err := rows.Scan(&idUser, &profileName, &avatarName)
+		if err != nil {
+			fmt.Println("Error when scan data here: ", err)
+		}
+    user := structs.SmallInfoUser {
+      Id_user: idUser,
+      Profile_name: profileName,
+      Avatar_name: avatarName,
+    }
+
+    users = append(users, user)
+  }
+  
+  return users
+}
+
 func GetInfoUser(db *sql.DB, idUserParams int) structs.User {
 	var idUser int
 	var username string

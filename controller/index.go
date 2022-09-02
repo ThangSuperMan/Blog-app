@@ -175,6 +175,7 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 
 	var cookieExists bool = CheckSessionCookieExists(w, r)
 	cookieName := "my_cookie"
+  
 
 	if cookieExists {
 		var sessionToken string = GetSessionTokenCookie(cookieName, r)
@@ -183,10 +184,13 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 			defer db.Close()
 			var idUser int = model.GetIdUserFromSessionsTable(db, sessionToken)
       var blogs []structs.Blog = model.ReadAllBlogs(db)
+      var lastestBlog structs.Blog
+      lastestBlog  = model.ReadTheLastestBlog(db)
+      fmt.Println("Image name: ", lastestBlog.Image_name)
+      fmt.Println("The lastest blog: ", lastestBlog)
 			var user structs.User
 			user = model.GetInfoUser(db, idUser)
 			var smallInfoUsersOwnBlogs []structs.SmallInfoUser = model.GetAllSmallInfoUsers(db)
-      fmt.Println("smallInfoUsersOwnBlogs: ", smallInfoUsersOwnBlogs)
 			data := structs.AccessToken{
 				Is_signed_in:              true,
 				Username:                  user.Username,
@@ -194,6 +198,7 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 				Profile_name:              user.Profile_name,
 				Avatar_name:               user.Avatar_name,
 				Blogs:                     blogs,
+        Lastest_blog:              lastestBlog,
 				Small_info_user_own_blogs: smallInfoUsersOwnBlogs,
 			}
 

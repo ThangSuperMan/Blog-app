@@ -36,5 +36,6 @@ type AccessToken struct {
 	Avatar_name  string
 	// Just for render blogs with homepage template
 	Blogs                     []Blog
+	Lastest_blog              Blog
 	Small_info_user_own_blogs []SmallInfoUser
 }

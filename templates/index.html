@@ -47,7 +47,24 @@
     {{ else }}
     {{ template "header"}}
     {{ end }}
-    <h2 class="title">Homepage</h2>
+    <div class="blog-lastest-wrapper">
+      <div class="blog-lastest">
+        <div class="blog-lastest-left-decoration"></div>
+        <h3 class="blog-lastest-title">Lastest blog</h3>
+      </div>
+      <div class="blog-lastest-content">
+        <div class="blog-lastest-content-img">
+          <img src="/static/uploads/images/blogs/{{ .Lastest_blog.Image_name }}" alt="lastest blog image" />
+        </div>
+        <div class="blog-lastest-content-right">
+          <a href="/">{{ .Lastest_blog.Title }}</a>
+          <p>{{ .Lastest_blog.Body }}</p>
+          <div class="blog-lastest-author">
+            Author
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="blogs">
       {{ range $blog := $blogs }}
       {{ $idUserOwnBlog := .Id_user}}
@@ -66,11 +83,17 @@
           </div>
           <!-- Display the info of author of this blog -->
           <!-- New -->
+          {{ $createdAt := .Created_at }}
           {{ range $smallInfo := $smallInfoUsersOwnBlogs }}
           {{ if eq $idUserOwnBlog .Id_user}}
-          <div class="blog-author">
-            <img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Image author own blog" />
-            <span>Author: {{ .Profile_name }}</span>
+          <div class="blog-author-wrapper">
+            <div class="blog-author">
+              <img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Image author own blog" />
+              <div class="blog-author-right">
+                <a href="/author">{{ .Profile_name }}</a>
+                <p>{{ $createdAt }}</p>
+              </div>
+            </div>
           </div>
           {{ end }}
           {{ end }}
@@ -78,22 +101,7 @@
         </div>
       </div>
 
-
       {{ end }}
-      <!-- New -->
-
-
-      {{ range $smallInfo := $smallInfoUsersOwnBlogs }}
-      <div class="small-info-user">
-        <div>
-          <p>Id user is: {{ .Id_user }}</p>
-          <p>{{ .Profile_name }}</p>
-          <p>{{ .Avatar_name }}</p>
-        </div>
-      </div>
-      {{ end }}
-
-      <!-- New -->
     </div>
   </main>
   <footer class="footer">Footer</footer>

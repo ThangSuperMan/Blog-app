@@ -6,6 +6,38 @@ import (
 	"fmt"
 )
 
+func ReadTheLastestBlog(db *sql.DB) structs.Blog {
+	fmt.Println("ReadTheLastestBlog")
+	var idBlog int
+	var title string
+	var body string
+	var imageName string
+	var createdAt string
+	var updatedAt sql.NullString
+	var idComment sql.NullInt64
+	var idUser int
+	statement := `select * 
+                from blogs 
+                order by id_blog desc
+                limit 1;`
+	row := db.QueryRow(statement)
+	err := row.Scan(&idBlog, &title, &body, &imageName, &createdAt, &updatedAt, &idComment, &idUser)
+	if err != nil {
+		fmt.Println("Error when scan the lastest blog: ", err)
+	}
+
+	blog := structs.Blog{
+		Id_blog:    idBlog,
+		Title:      title,
+		Body:       body,
+    Image_name: imageName,
+		Created_at: createdAt,
+		Id_user:    idUser,
+	}
+
+	return blog
+}
+
 func AddBlog(db *sql.DB, title string, body string, imageName, createdAt string, idUser int) {
 	fmt.Println("AddBlog model")
 	statment := `insert into blogs(title, body, image_name, created_at, id_user) values (?, ?, ?, ?, ?)`

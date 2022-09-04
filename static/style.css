@@ -1,4 +1,3 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap'); */
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&display=swap');
 
 :root {
@@ -120,6 +119,7 @@ form button {
 
 .blogs {
   width: 1116px;
+  margin-top: 32px;
   margin-inline: auto;
   display: grid;
   grid-template-columns: calc(33.33% - 21.33px) calc(33.33% - 21.33px)  calc(33.33% - 21.33px);
@@ -169,7 +169,7 @@ form button {
   margin-left: 32px;
 }
 
-.blog-lastest-content-right a {
+.blog-lastest-content-right > a {
   display: inline-block;
   text-decoration: none;
   color: var(--primary-text-color);
@@ -177,15 +177,40 @@ form button {
   margin-top: 8px;
 }
 
-.blog-lastest-content-right p {
+.blog-lastest-content-right > p {
   margin-top: 16px;
 }
 
 .blog-lastest-author {
-  background: lightblue;
   margin-top: 16px;
+  height: 32px;
+  display: flex;
+  align-items: center;
 }
 
+.blog-lastest-author-right {
+ margin-left: 8px;
+}
+
+.blog-lastest-author-right-link {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 16px;
+  text-decoration: none;
+  color: var(--primary-color-btn);
+}
+
+.blog-lastest-author-right-created-at {
+  color: var(--secondary-text-color);
+  font-size: 11px;
+}
+
+.blog-lastest-author img {
+  width: 32px;
+  height: 32px;
+  border-radius: 32px;
+  object-fit: cover;
+}
 
 .blog-lastest-content-img {
   height: 300px;
@@ -293,10 +318,9 @@ form button {
     width: 700px;
   }
 
-  .blog-lastest-content-img {
+  .blog-lastest-content-img img {
     width: 336px;
   }
-
 
   .blogs {
     grid-template-columns: calc(50% - 16px) calc(50% - 16px);
@@ -317,7 +341,14 @@ form button {
   }
 
   .blog-lastest-content-img {
+    width: 311px;
+    height: 200px;
+  }
+
+  .blog-lastest-content-img img {
     width: 100%;
+    height: 100%;
+    border-radius: 0px;
   }
 
   .blog-lastest-content-right {
@@ -326,12 +357,20 @@ form button {
     padding-bottom: 16px;
   }
 
-  .blog-lastest-content-right a {
+  .blog-lastest-content-right > a {
+    display: -webkit-box; 
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    font-size: 18px;
+    line-height: 24px;
+    text-decoration: none;
+    color: var(--primary-text-color);
     font-size: 18px;
     font-family: 'Merriweather', serif;
   }
 
-  .blog-lastest-content-right p {
+  .blog-lastest-content-right > p {
     font-size: 14px;
     color: var(--secondary-text-color);
   }

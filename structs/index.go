@@ -27,6 +27,12 @@ type SmallInfoUser struct {
 	Avatar_name  string
 }
 
+type AuthorOfTheLastestBlog struct {
+	Id_user      int
+	Profile_name string
+	Avatar_name  string
+}
+
 type AccessToken struct {
 	Is_signed_in bool
 	Id_user      int
@@ -35,7 +41,8 @@ type AccessToken struct {
 	Profile_name string
 	Avatar_name  string
 	// Just for render blogs with homepage template
-	Blogs                     []Blog
-	Lastest_blog              Blog
-	Small_info_user_own_blogs []SmallInfoUser
+	Blogs                      []Blog
+	Lastest_blog               Blog
+	Author_of_the_lastest_blog AuthorOfTheLastestBlog
+	Small_info_user_own_blogs  []SmallInfoUser
 }

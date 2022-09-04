@@ -30,7 +30,7 @@ func ReadTheLastestBlog(db *sql.DB) structs.Blog {
 		Id_blog:    idBlog,
 		Title:      title,
 		Body:       body,
-    Image_name: imageName,
+		Image_name: imageName,
 		Created_at: createdAt,
 		Id_user:    idUser,
 	}
@@ -40,14 +40,34 @@ func ReadTheLastestBlog(db *sql.DB) structs.Blog {
 
 func AddBlog(db *sql.DB, title string, body string, imageName, createdAt string, idUser int) {
 	fmt.Println("AddBlog model")
-	statment := `insert into blogs(title, body, image_name, created_at, id_user) values (?, ?, ?, ?, ?)`
+	statment := `insert into blogs(title, body, image_name, created_at, id_user) 
+               values (?, ?, ?, ?, ?)`
 	stmt, _ := db.Prepare(statment)
 	result, _ := stmt.Exec(title, body, imageName, createdAt, idUser)
 	fmt.Println("result add blog record: ", result)
 }
 
+func readTheLastIdBlogInTableBlog(db *sql.DB) int {
+	fmt.Println("readTheLastIdBlogInTableBlog")
+	var idBlog int
+	statement := `select id_blog 
+                from blogs
+                order by id_blog desc 
+                limit 1`
+	row := db.QueryRow(statement)
+	err := row.Scan(&idBlog)
+	if err != nil {
+		fmt.Println("Error when scan the lastest blog: ", err)
+	}
+
+	return idBlog
+}
+
+// Read all blogs except the first one cause it is the lastest blog
 func ReadAllBlogs(db *sql.DB) []structs.Blog {
 	fmt.Println("ReadAllBlogs")
+	lastestIdBlog := readTheLastIdBlogInTableBlog(db)
+	fmt.Println("lastIdBlog: ", lastestIdBlog)
 	var idBlog int
 	var title string
 	var body string
@@ -56,8 +76,14 @@ func ReadAllBlogs(db *sql.DB) []structs.Blog {
 	var updatedAt sql.NullString
 	var idComment sql.NullInt64
 	var idUser int
-	statement := `select * from blogs`
-	rows, err := db.Query(statement)
+
+	lastestIdBlog = lastestIdBlog - 1
+	statement := `select * 
+  from blogs
+  where id_blog between 1 and $1
+  order by id_blog desc`
+
+	rows, err := db.Query(statement, lastestIdBlog)
 
 	if err != nil {
 		fmt.Println("Error when read all blogs here: ", err)

@@ -11,7 +11,7 @@
 <body>
   <main>
     <!-- User signed in -->
-    {{ if .IsSignedIn }}
+    {{ if .Is_signed_in }}
     <header>
       <div class="menu-logo">
         <a href="/">
@@ -23,10 +23,10 @@
           <li class="menu-list-username">
             <a href="/profile" class="profile">
               <span class="profile-username">
-                {{ .ProfileName }}
+                {{ .Profile_name }}
               </span>
               <div class="profile-avatar">
-                <img src="/static/uploads/images/users/{{ .AvatarName }}" alt="Avatar profile image" />
+                <img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Avatar profile image" />
               </div>
             </a>
           </li>
@@ -48,7 +48,7 @@
     <h2 class="title">Add blog</h2>
     <div class="form-signin">
       <form class="form" action="/add_single_blog" method="post" enctype="multipart/form-data">
-          <input type="hidden" name="id_user" value="{{ .Id_user }}" />
+        <input type="hidden" name="id_user" value="{{ .Id_user }}" />
         <input type="text" name="title" placeholder="Title blog" required />
         <br>
         <input type="file" name="image_blog" placeholder="Avatar profile" />

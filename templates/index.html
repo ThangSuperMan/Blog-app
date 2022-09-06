@@ -54,15 +54,20 @@
       </div>
       <div class="blog-lastest-content">
         <div class="blog-lastest-content-img">
-          <img src="/static/uploads/images/blogs/{{ .Lastest_blog.Image_name }}" alt="lastest blog image" />
+          <a href="/blog_detail?id={{ .Lastest_blog.Id_blog}}">
+            <img src="/static/uploads/images/blogs/{{ .Lastest_blog.Image_name }}" alt="lastest blog image" />
+          </a>
         </div>
         <div class="blog-lastest-content-right">
-          <a class="blog-lastest-content-right-link" href="/">{{ .Lastest_blog.Title }}</a>
+          <a class="blog-lastest-content-right-link" href="/blog_detail?id={{ .Lastest_blog.Id_blog}}">{{
+            .Lastest_blog.Title }}</a>
           <p class="blog-lastest-content-right-body">{{ .Lastest_blog.Body }}</p>
           <div class="blog-lastest-author">
             <img src="/static/uploads/images/users/{{ .Author_of_the_lastest_blog.Avatar_name }}" />
             <div class="blog-lastest-author-right">
-              <a class="blog-lastest-author-right-link" href="/">{{ .Author_of_the_lastest_blog.Profile_name }}</a>
+              <a class="blog-lastest-author-right-link" href="/blog_detail?id={{ .Lastest_blog.Id_blog }}">{{
+                .Author_of_the_lastest_blog.Profile_name }}
+              </a>
               <p class="blog-lastest-author-right-created-at">{{ .Lastest_blog.Created_at }}</p>
             </div>
           </div>
@@ -73,13 +78,13 @@
         {{ $idUserOwnBlog := .Id_user}}
         <div class="blog">
           <div class="blog-image">
-            <a href="/blog_detail/{{ .Id_blog }}">
+            <a href="/blog_detail?id={{ .Id_blog }}">
               <img src="/static/uploads/images/blogs/{{ .Image_name }}" alt="Image blog" />
             </a>
           </div>
           <div class="blog-content">
-            <div class="blog-content-title" href="/detail_blog">
-              <a>{{ .Title }}</a>
+            <div class="blog-content-title" href="/blog_detail/{{ .Id_blog }}">
+              <a href="/blog_detail?id={{ .Id_blog }}">{{ .Title }}</a>
             </div>
             <div div class="blog-content-body">
               <p>{{ .Body }}</p>

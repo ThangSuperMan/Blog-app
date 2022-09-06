@@ -168,6 +168,73 @@ func RenderAddBlogPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func RenderBlogDetailPage(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("RenderDetailBlogPage")
+
+	if r.Method == http.MethodPost {
+		return
+	}
+
+	templateName := "blog-detail.html"
+	tpl, err := template.ParseGlob("./templates/*.html")
+	helper.HaltOn(err)
+
+	idBlog := r.URL.Query().Get("id")
+	idBlogTypeInt, _ := strconv.Atoi(idBlog)
+	db := model.ConnectDatabase()
+	var blogDetail structs.Blog
+	blogDetail = model.ReadOneBlog(db, idBlogTypeInt)
+  idUser := blogDetail.Id_user
+	fmt.Println("blog detail: ", blogDetail)
+  var user structs.User
+  user = model.GetInfoUser(db, idUser) 
+  fmt.Println("user: ", user)
+
+  var cookieExists bool = CheckSessionCookieExists(w, r)
+	cookieName := "my_cookie"
+
+	if cookieExists {
+		var sessionToken string = GetSessionTokenCookie(cookieName, r)
+		if sessionToken != "" {
+      var user structs.User
+			var idUser int = model.GetIdUserFromSessionsTable(db, sessionToken)
+      user = model.GetInfoUser(db, idUser)
+      data := structs.AccessToken{
+        Is_signed_in:               true,
+        Username:                   user.Username,
+        Password:                   user.Password,
+        Profile_name:               user.Profile_name,
+        Avatar_name:                user.Avatar_name,
+        Blog_detail:                blogDetail,
+        Author_of_the_current_blog_detail: user,
+      }
+
+      fmt.Println("blogDetail.Created_at: ", blogDetail.Created_at)
+
+      tpl.ExecuteTemplate(w, templateName, data)
+		} else {
+      data := structs.AccessToken{
+        Is_signed_in:               false,
+        Blog_detail:                blogDetail,
+        Author_of_the_current_blog_detail: user,
+      }
+
+      fmt.Println("blogDetail.Created_at: ", blogDetail.Created_at)
+
+      tpl.ExecuteTemplate(w, templateName, data)
+		}
+	} else {
+      data := structs.AccessToken{
+        Is_signed_in:               false,
+        Blog_detail:                blogDetail,
+        Author_of_the_current_blog_detail: user,
+      }
+
+      fmt.Println("blogDetail.Created_at: ", blogDetail.Created_at)
+      tpl.ExecuteTemplate(w, templateName, data)
+	}
+}
+
 func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("RenderHomePage")
 	templateName := "index.html"
@@ -178,11 +245,9 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 	cookieName := "my_cookie"
 
 	if cookieExists {
-    fmt.Println("cookieExists: ", cookieExists)
 		var sessionToken string = GetSessionTokenCookie(cookieName, r)
-    fmt.Println("sessionToken: ", sessionToken )
 		if sessionToken != "" {
-      fmt.Println("sessionToken != empty")
+			fmt.Println("sessionToken != empty")
 			db := model.ConnectDatabase()
 			defer db.Close()
 			var idUser int = model.GetIdUserFromSessionsTable(db, sessionToken)
@@ -197,8 +262,6 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 				Profile_name: OwnerTheLastestBlog.Profile_name,
 				Avatar_name:  OwnerTheLastestBlog.Avatar_name,
 			}
-
-			fmt.Println("authorOwnTheLastestBlog: ", authorOwnTheLastestBlog)
 
 			var user structs.User
 			user = model.GetInfoUser(db, idUser)
@@ -217,7 +280,6 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 
 			tpl.ExecuteTemplate(w, templateName, data)
 		} else {
-      fmt.Println("sessionToken is empty")
 			db := model.ConnectDatabase()
 			var lastestBlog structs.Blog
 			lastestBlog = model.ReadTheLastestBlog(db)
@@ -231,36 +293,33 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 				Avatar_name:  OwnerTheLastestBlog.Avatar_name,
 			}
 			lastestBlog = model.ReadTheLastestBlog(db)
-      fmt.Println("lastestBlog: ", lastestBlog )
 			data := structs.AccessToken{
-				Blogs:                     blogs,
-				Lastest_blog:              lastestBlog,
+				Blogs:                      blogs,
+				Lastest_blog:               lastestBlog,
 				Author_of_the_lastest_blog: authorOwnTheLastestBlog,
-				Small_info_user_own_blogs: smallInfoUsersOwnBlogs,
+				Small_info_user_own_blogs:  smallInfoUsersOwnBlogs,
 			}
 
 			tpl.ExecuteTemplate(w, templateName, data)
 		}
 	} else {
-      fmt.Println("cookieExists: ", cookieExists)
 		db := model.ConnectDatabase()
 		var lastestBlog structs.Blog
 		lastestBlog = model.ReadTheLastestBlog(db)
 		var blogs []structs.Blog = model.ReadAllBlogs(db)
 		var smallInfoUsersOwnBlogs []structs.SmallInfoUser = model.GetAllSmallInfoUsers(db)
-    var authorOwnTheLastestBlog structs.AuthorOfTheLastestBlog
-    fmt.Println("lastestBlog: ", lastestBlog )
-    OwnerTheLastestBlog := model.GetInfoUser(db, lastestBlog.Id_user)
-    authorOwnTheLastestBlog = structs.AuthorOfTheLastestBlog{
-      Id_user:      OwnerTheLastestBlog.Id_user,
-      Profile_name: OwnerTheLastestBlog.Profile_name,
-      Avatar_name:  OwnerTheLastestBlog.Avatar_name,
-    }
+		var authorOwnTheLastestBlog structs.AuthorOfTheLastestBlog
+		OwnerTheLastestBlog := model.GetInfoUser(db, lastestBlog.Id_user)
+		authorOwnTheLastestBlog = structs.AuthorOfTheLastestBlog{
+			Id_user:      OwnerTheLastestBlog.Id_user,
+			Profile_name: OwnerTheLastestBlog.Profile_name,
+			Avatar_name:  OwnerTheLastestBlog.Avatar_name,
+		}
 		data := structs.AccessToken{
-			Blogs:                     blogs,
-			Small_info_user_own_blogs: smallInfoUsersOwnBlogs,
-      Author_of_the_lastest_blog: authorOwnTheLastestBlog,
-			Lastest_blog:              lastestBlog,
+			Blogs:                      blogs,
+			Small_info_user_own_blogs:  smallInfoUsersOwnBlogs,
+			Author_of_the_lastest_blog: authorOwnTheLastestBlog,
+			Lastest_blog:               lastestBlog,
 		}
 
 		tpl.ExecuteTemplate(w, templateName, data)

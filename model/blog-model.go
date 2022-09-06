@@ -6,6 +6,33 @@ import (
 	"fmt"
 )
 
+func ReadOneBlog(db *sql.DB, idBlog int) structs.Blog {
+	fmt.Println("ReadOneBlog")
+	var title string
+	var body string
+	var imageName string
+	var idUser int
+	var createdAt string
+
+	statement := `select title, body, image_name, created_at, id_user from blogs where id_blog = ?`
+	row := db.QueryRow(statement, idBlog)
+	err := row.Scan(&title, &body, &imageName, &createdAt, &idUser)
+	if err != nil {
+		fmt.Println("Error when scan blog record: ", err)
+		return structs.Blog{}
+	}
+
+	blog := structs.Blog{
+		Title:      title,
+		Body:       body,
+		Image_name: imageName,
+		Created_at: createdAt,
+		Id_user:    idUser,
+	}
+
+	return blog
+}
+
 func ReadTheLastestBlog(db *sql.DB) structs.Blog {
 	fmt.Println("ReadTheLastestBlog")
 	var idBlog int
@@ -40,7 +67,8 @@ func ReadTheLastestBlog(db *sql.DB) structs.Blog {
 
 func AddBlog(db *sql.DB, title string, body string, imageName, createdAt string, idUser int) {
 	fmt.Println("AddBlog model")
-	statment := `insert into blogs(title, body, image_name, created_at, id_user) 
+	statment := `insert into 
+               blogs(title, body, image_name, created_at, id_user) 
                values (?, ?, ?, ?, ?)`
 	stmt, _ := db.Prepare(statment)
 	result, _ := stmt.Exec(title, body, imageName, createdAt, idUser)
@@ -79,9 +107,9 @@ func ReadAllBlogs(db *sql.DB) []structs.Blog {
 
 	lastestIdBlog = lastestIdBlog - 1
 	statement := `select * 
-  from blogs
-  where id_blog between 1 and $1
-  order by id_blog desc`
+                from blogs
+                where id_blog between 1 and $1
+                order by id_blog desc`
 
 	rows, err := db.Query(statement, lastestIdBlog)
 

@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Detail blog page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/blog-detail.css" />
+</head>
+
+<body>
+  <main>
+    <!-- User signed in -->
+    {{ if .Is_signed_in }}
+    <header>
+      <div class="menu-logo">
+        <a href="/">
+          Logo
+        </a>
+      </div>
+      <div class="menu-list">
+        <ul>
+          <li class="menu-list-username">
+            <a href="/profile" class="profile">
+              <span class="profile-username">
+                {{ .Profile_name }}
+              </span>
+              <div class="profile-avatar">
+                <img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Avatar profile image" />
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/">Home</a>
+          </li>
+          <li>
+            <a href="/about">About</a>
+          </li>
+          <li>
+            <a href="/logout">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </header>
+    {{ else }}
+    {{ template "header"}}
+    {{ end }}
+    <div class="container">
+      <div class="blog-detail">
+        <h2 class="blog-detail-title">{{ .Blog_detail.Title }}</h2>
+        <div class="blog-author-wrapper">
+          <div style="margin-bottom: 16px;" class="blog-author">
+            <img src="/static/uploads/images/users/{{ .Author_of_the_current_blog_detail.Avatar_name }}"
+              alt="Image author own blog" />
+            <div class="blog-author-right">
+              <a href="/author">{{ .Author_of_the_current_blog_detail.Profile_name }}</a>
+              <p>{{ .Blog_detail.Created_at }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="blog-img">
+          <img src="/static/uploads/images/blogs/{{ .Blog_detail.Image_name }}" />
+          <p class="blog-title">{{ .Blog_detail.Body }}</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>

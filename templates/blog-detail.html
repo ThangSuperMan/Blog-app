@@ -4,8 +4,16 @@
 <head>
   <title>Detail blog page</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Styles -->
   <link rel="stylesheet" href="/static/style.css" />
   <link rel="stylesheet" href="/static/blog-detail.css" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 
 <body>
@@ -45,9 +53,23 @@
     {{ else }}
     {{ template "header"}}
     {{ end }}
-    <div class="container">
+    <div class="blog-detail-container">
+      <div class="blog-detail-action-container">
+        <div class="blog-detail-action">
+          <div class="blog-detail-action-bg-circle">
+            <i class="fa-regular fa-heart"></i>
+          </div>
+          <span>7</span>
+        </div>
+        <div class="blog-detail-action">
+          <div class="blog-detail-action-bg-circle">
+            <i class="fa-regular fa-comment"></i>
+          </div>
+          <span>1</span>
+        </div>
+      </div>
+      <h2 class="blog-detail-title">{{ .Blog_detail.Title }}</h2>
       <div class="blog-detail">
-        <h2 class="blog-detail-title">{{ .Blog_detail.Title }}</h2>
         <div class="blog-author-wrapper">
           <div style="margin-bottom: 16px;" class="blog-author">
             <img src="/static/uploads/images/users/{{ .Author_of_the_current_blog_detail.Avatar_name }}"
@@ -60,8 +82,8 @@
         </div>
         <div class="blog-img">
           <img src="/static/uploads/images/blogs/{{ .Blog_detail.Image_name }}" />
-          <p class="blog-title">{{ .Blog_detail.Body }}</p>
         </div>
+        <p>{{ .Blog_detail.Body }}</p>
       </div>
     </div>
   </main>

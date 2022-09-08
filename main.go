@@ -11,7 +11,7 @@ func handler() {
 	http.HandleFunc("/", controller.RenderHomePage)
 	http.HandleFunc("/profile", controller.RenderProfilePage)
 	http.HandleFunc("/edit_profile", controller.HandleEditProfile)
-  http.HandleFunc("/blog_detail", controller.RenderBlogDetailPage)
+	http.HandleFunc("/blog_detail", controller.RenderBlogDetailPage)
 	http.HandleFunc("/add_blog", controller.RenderAddBlogPage)
 	http.HandleFunc("/add_single_blog", controller.HandleAddSingleBlog)
 	http.HandleFunc("/about", controller.RenderAboutPage)
@@ -26,7 +26,7 @@ func handler() {
 func main() {
 	model.InitModel()
 	handler()
-	port := ":3000"
+	port := ":3004"
 	fmt.Println("Listenning on the port", port)
 	http.ListenAndServe(port, nil)
 }

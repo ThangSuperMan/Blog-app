@@ -38,6 +38,7 @@ func createTables(db *sql.DB) {
     "image_name"      text not null,
     "created_at"      text not null,
     "updated_at"      text,
+    "amount_of_likes" integer not null,
     "id_comment"      integer, 
     "id_user"         integer,
     foreign key (id_user) 

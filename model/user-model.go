@@ -9,35 +9,36 @@ import (
 
 func GetAllSmallInfoUsers(db *sql.DB) []structs.SmallInfoUser {
 	fmt.Println("GetAllSmallInfoUsers")
-  var idUser int
-  var profileName string 
-  var avatarName string
-  statment := `select id_user, profile_name, avatar_name  from users`
-  rows, err := db.Query(statment)
+	var idUser int
+	var profileName string
+	var avatarName string
+	statment := `select id_user, profile_name, avatar_name from users`
+	rows, err := db.Query(statment)
 
-  if err != nil {
-    fmt.Println("Error when get all user: ", err)
-  }
+	if err != nil {
+		fmt.Println("Error when get all user: ", err)
+	}
 
-  users := make([]structs.SmallInfoUser, 0)
-  for rows.Next() {
-    err := rows.Scan(&idUser, &profileName, &avatarName)
+	users := make([]structs.SmallInfoUser, 0)
+	for rows.Next() {
+		err := rows.Scan(&idUser, &profileName, &avatarName)
 		if err != nil {
 			fmt.Println("Error when scan data here: ", err)
 		}
-    user := structs.SmallInfoUser {
-      Id_user: idUser,
-      Profile_name: profileName,
-      Avatar_name: avatarName,
-    }
+		user := structs.SmallInfoUser{
+			Id_user:      idUser,
+			Profile_name: profileName,
+			Avatar_name:  avatarName,
+		}
 
-    users = append(users, user)
-  }
-  
-  return users
+		users = append(users, user)
+	}
+
+	return users
 }
 
 func GetInfoUser(db *sql.DB, idUserParams int) structs.User {
+	fmt.Println("GetInfoUser")
 	var idUser int
 	var username string
 	var password string
@@ -81,6 +82,7 @@ func UpdateProfileName(db *sql.DB, idUser int, newProfileUserName string) {
 }
 
 func GetUsernameAndAvatarNameOfUsersTable(db *sql.DB, idUser int) (string, string) {
+	fmt.Println("GetUsernameAndAvatarNameOfUsersTable")
 	var username string
 	var avatarName string
 	statement := `select username, avatar_name from users where id_user=?`
@@ -96,6 +98,7 @@ func GetUsernameAndAvatarNameOfUsersTable(db *sql.DB, idUser int) (string, strin
 }
 
 func GetUsernameAndPasswordOfUser(db *sql.DB, usernameParams string) (string, string) {
+	fmt.Println("GetUsernameAndPasswordOfUser")
 	var username string
 	var password string
 	statement := `select username, password from users where username=?`
@@ -111,6 +114,7 @@ func GetUsernameAndPasswordOfUser(db *sql.DB, usernameParams string) (string, st
 }
 
 func GetIdUserFromSessionsTable(db *sql.DB, sessionToken string) int {
+	fmt.Println("GetIdUserFromSessionsTable")
 	var idUser int
 	statement := `select id_user from sessions where session_token=?`
 	row := db.QueryRow(statement, sessionToken)

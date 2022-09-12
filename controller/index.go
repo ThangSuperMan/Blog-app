@@ -249,14 +249,17 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 		if sessionToken != "" {
 			fmt.Println("sessionToken != empty")
 			db := model.ConnectDatabase()
+      fmt.Println("db: ", db)
 			defer db.Close()
 			var idUser int = model.GetIdUserFromSessionsTable(db, sessionToken)
 			var blogs []structs.Blog = model.ReadAllBlogs(db)
 			var lastestBlog structs.Blog
 			lastestBlog = model.ReadTheLastestBlog(db)
+      fmt.Println("lastestBlog: ", lastestBlog)
 
 			var authorOwnTheLastestBlog structs.AuthorOfTheLastestBlog
 			OwnerTheLastestBlog := model.GetInfoUser(db, lastestBlog.Id_user)
+      fmt.Println("OwnerTheLastestBlog: ", OwnerTheLastestBlog)
 			authorOwnTheLastestBlog = structs.AuthorOfTheLastestBlog{
 				Id_user:      OwnerTheLastestBlog.Id_user,
 				Profile_name: OwnerTheLastestBlog.Profile_name,
@@ -287,6 +290,8 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 			var smallInfoUsersOwnBlogs []structs.SmallInfoUser = model.GetAllSmallInfoUsers(db)
 			var authorOwnTheLastestBlog structs.AuthorOfTheLastestBlog
 			OwnerTheLastestBlog := model.GetInfoUser(db, lastestBlog.Id_user)
+      fmt.Println("OwnerTheLastestBlog: ", OwnerTheLastestBlog)
+
 			authorOwnTheLastestBlog = structs.AuthorOfTheLastestBlog{
 				Id_user:      OwnerTheLastestBlog.Id_user,
 				Profile_name: OwnerTheLastestBlog.Profile_name,

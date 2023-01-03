@@ -1,6 +1,8 @@
 package helper
 
-import "log"
+import (
+	"log"
+)
 
 func HaltOn(e error) {
 	if e != nil {

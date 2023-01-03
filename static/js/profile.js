@@ -10,7 +10,7 @@ const templateEditProfileName = `
         </div>
       </div>
     </form>
-`
+`;
 
 const templateEditPassword = `
     <form action="/edit_profile" method="post">
@@ -25,56 +25,53 @@ const templateEditPassword = `
         </div>
       </div>
     </form>
-`
+`;
 
 function toArray(x) {
-  var arr = []
+  var arr = [];
   for (var i = 0; i < x.length; i++) {
-    arr.push(x[i])
+    arr.push(x[i]);
   }
 
-  return arr
+  return arr;
 }
 
 function handleClickEditButton(event) {
-  let currentIdEditButton = event.target.getAttribute("id")
-  const profileTemplate = document.querySelector(".profile-template")
-  const profileTemplateBackground = document.querySelector(".profile-template-background")
+  let currentIdEditButton = event.target.getAttribute("id");
+  const profileTemplate = document.querySelector(".profile-template");
+  const profileTemplateBackground = document.querySelector(
+    ".profile-template-background"
+  );
 
   if (currentIdEditButton == "edit_profile_name") {
-    profileTemplate.innerHTML = templateEditProfileName
+    profileTemplate.innerHTML = templateEditProfileName;
   } else if (currentIdEditButton == "edit_password") {
-    profileTemplate.innerHTML = templateEditPassword
+    profileTemplate.innerHTML = templateEditPassword;
   }
 
-  profileTemplate.classList.add("active")
-  profileTemplateBackground.classList.add("active")
+  profileTemplate.classList.add("active");
+  profileTemplateBackground.classList.add("active");
 }
 
-// function handleClickAddBlog(event) {
-//   console.log("handleClickAddBlog")
-//   event.preventDefault()
-// }
-//
 window.addEventListener("DOMContentLoaded", () => {
   // const addBlogBtn = document.querySelector("#add_blog")
-  const editProfileNameBtn = document.querySelector("#edit_profile_name")
-  const editPasswordBtn = document.querySelector("#edit_password")
-  const profileTemplate = document.querySelector(".profile-template")
-  const profileTemplateBackground = document.querySelector(".profile-template-background")
-  const edits = document.getElementsByClassName("edit")
-  editButtons = toArray(edits)
+  const editProfileNameBtn = document.querySelector("#edit_profile_name");
+  const editPasswordBtn = document.querySelector("#edit_password");
+  const profileTemplate = document.querySelector(".profile-template");
+  const profileTemplateBackground = document.querySelector(
+    ".profile-template-background"
+  );
+  const edits = document.getElementsByClassName("edit");
+  editButtons = toArray(edits);
 
   // addBlogBtn.addEventListener("click", handleClickAddBlog)
-  editProfileNameBtn.addEventListener('click', handleClickEditButton)
-  editPasswordBtn.addEventListener('click', handleClickEditButton)
+  editProfileNameBtn.addEventListener("click", handleClickEditButton);
+  editPasswordBtn.addEventListener("click", handleClickEditButton);
 
   profileTemplateBackground.addEventListener("mousedown", (e) => {
-
     if (e.target == profileTemplateBackground) {
-      profileTemplate.classList.remove("active")
-      profileTemplateBackground.classList.remove("active")
+      profileTemplate.classList.remove("active");
+      profileTemplateBackground.classList.remove("active");
     }
-  })
-})
-
+  });
+});

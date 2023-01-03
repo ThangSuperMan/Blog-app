@@ -5,6 +5,11 @@
   <title>Homepage</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/static/style.css" />
+
+  <link rel="shortcut icon" href="#" />
+
+  <!-- Scripts -->
+  <script type="text/javascript" src="/static/js/home.js"></script>
 </head>
 
 <body>
@@ -13,38 +18,41 @@
     {{ $smallInfoUsersOwnBlogs := .Small_info_user_own_blogs }}
     <!-- User signed in -->
     {{ if .Is_signed_in }}
-    <header>
-      <div class="menu-logo">
-        <a href="/">
-          Logo
-        </a>
-      </div>
-      <div class="menu-list">
-        <ul>
-          <li class="menu-list-username">
-            <a href="/profile" class="profile">
-              <span class="profile-username">
-                {{ .Profile_name }}
-              </span>
-              <div class="profile-avatar">
-                <img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Avatar profile image" />
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="/">Home</a>
-          </li>
-          <li>
-            <a href="/about">About</a>
-          </li>
-          <li>
-            <a href="/logout">Logout</a>
-          </li>
-        </ul>
-      </div>
-    </header>
+		<header>
+		  <div class="menu-logo">
+			<a href="/">
+			  Thang Blog
+			</a>
+		  </div>
+		  <div class="menu-list">
+			<ul>
+			  <li class="menu-list-username">
+				<a href="/profile" class="profile">
+				  <span class="profile-username">
+					{{ .Profile_name }}
+				  </span>
+				  <div class="profile-avatar">
+					<img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Avatar profile image" />
+				  </div>
+				</a>
+			  </li>
+			  <li>
+				<a href="/">Home</a>
+			  </li>
+			  <li>
+				<a href="/about">About</a>
+			  </li>
+			  <li>
+				<a href="/logout">Logout</a>
+			  </li>
+			  <li>
+				<a class="primary-button" href="/add_blog">Add blog</a>
+			  </li>
+			</ul>
+		  </div>
+		</header>
     {{ else }}
-    {{ template "header"}}
+		{{ template "header"}}
     {{ end }}
     <div class="blog-lastest-wrapper">
       <div class="blog-lastest">
@@ -74,41 +82,44 @@
       </div>
       <div class="blogs">
         {{ range $blog := $blogs }}
-        {{ $idUserOwnBlog := .Id_user}}
-        <div class="blog">
-          <div class="blog-image">
-            <a href="/blog_detail?id={{ .Id_blog }}">
-              <img src="/static/uploads/images/blogs/{{ .Image_name }}" alt="Image blog" />
-            </a>
-          </div>
-          <div class="blog-content">
-            <div class="blog-content-title" href="/blog_detail/{{ .Id_blog }}">
-              <a href="/blog_detail?id={{ .Id_blog }}">{{ .Title }}</a>
-            </div>
-            <div div class="blog-content-body">
-              <p>{{ .Body }}</p>
-            </div>
-            <!-- Display the info of author of this blog -->
-            <!-- New -->
-            {{ $createdAt := .Created_at }}
-            {{ range $smallInfo := $smallInfoUsersOwnBlogs }}
-            {{ if eq $idUserOwnBlog .Id_user}}
-            <div class="blog-author-wrapper">
-              <div class="blog-author">
-                <img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Image author own blog" />
-                <div class="blog-author-right">
-                  <a href="/author">{{ .Profile_name }}</a>
-                  <p>{{ $createdAt }}</p>
-                </div>
-              </div>
-            </div>
-            {{ end }}
-            {{ end }}
-            <!-- New -->
-          </div>
-        </div>
-
+		<div>{{ $blog }}</div>
+			{{ $idUserOwnBlog := .Id_user}}
+			<div>idUserOwnBlog {{ $idUserOwnBlog }}</div>
+			<div class="blog">
+			  <div class="blog-image">
+				<a href="/blog_detail?id={{ .Id_blog }}">
+				  <img src="/static/uploads/images/blogs/{{ .Image_name }}" alt="Image blog" />
+				</a>
+			  </div>
+			  <div class="blog-content">
+				<div class="blog-content-title" href="/blog_detail/{{ .Id_blog }}">
+				  <a href="/blog_detail?id={{ .Id_blog }}">{{ .Title }}</a>
+				</div>
+				<div div class="blog-content-body">
+				  <p>{{ .Body }}</p>
+				</div>
+				<!-- Display the info of author of this blog -->
+				<!-- New -->
+				{{ $createdAt := .Created_at }}
+				{{ range $smallInfo := $smallInfoUsersOwnBlogs }}
+					{{ if eq $idUserOwnBlog .Id_user}}
+						<div class="blog-author-wrapper">
+						  <div class="blog-author">
+							  <div>Here</div>
+							<img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Image author own blog" />
+							<div class="blog-author-right">
+							  <a href="/author">{{ .Profile_name }}</a>
+							  <p>{{ $createdAt }}</p>
+							</div>
+						  </div>
+						</div>
+					{{ end }}
+				{{ end }}
+				<!-- New -->
+			  </div>
+			</div>
         {{ end }}
+
       </div>
       <footer class="footer">Footer</footer>
   </main>

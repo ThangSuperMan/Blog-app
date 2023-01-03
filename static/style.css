@@ -1,20 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&display=swap");
 
 :root {
   --primary-text-color: #242c3a;
   --secondary-text-color: #64646d;
-  --border-color: #CFD2CF;
+  --border-color: #cfd2cf;
   --primary-color-btn: #007d65;
 }
 
 * {
-  margin: 0; 
+  margin: 0;
   padding: 0;
   box-sizing: border;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   display: flex;
 }
 
@@ -22,13 +23,20 @@ main {
   width: 100%;
 }
 
+.primary-button {
+  padding: 8px 32px;
+  background-color: var(--primary-color-btn);
+  color: white !important;
+  border-radius: 5px;
+}
+
 header {
   background-color: #eee;
-  display: flex;  
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px;
-  max-width: 500px;
+  padding: 16px 32px;
+  max-width: 700px;
   margin-inline: auto;
 }
 
@@ -84,7 +92,7 @@ header {
   list-style: none;
 }
 
-.menu-list ul li a { 
+.menu-list ul li a {
   text-decoration: none;
   color: black;
 }
@@ -95,7 +103,7 @@ header {
 
 .menu-list ul li a:first-child {
   margin-right: 8px;
-}  
+}
 
 .form-signup {
   display: flex;
@@ -115,7 +123,7 @@ form input {
 }
 
 form > div {
-   text-align: center;  
+  text-align: center;
 }
 
 form button {
@@ -127,7 +135,9 @@ form button {
   margin-top: 32px;
   margin-inline: auto;
   display: grid;
-  grid-template-columns: calc(33.33% - 21.33px) calc(33.33% - 21.33px)  calc(33.33% - 21.33px);
+  grid-template-columns: calc(33.33% - 21.33px) calc(33.33% - 21.33px) calc(
+      33.33% - 21.33px
+    );
   column-gap: 32px;
   row-gap: 32px;
   margin-bottom: 32px;
@@ -158,7 +168,7 @@ form button {
 
 .blog-lastest-title {
   font-size: 32px;
-  font-family: 'Merriweather', serif;
+  font-family: "Merriweather", serif;
   font-weight: 700;
   line-height: 40px;
   margin-left: 16px;
@@ -196,7 +206,7 @@ form button {
 }
 
 .blog-lastest-author-right {
- margin-left: 8px;
+  margin-left: 8px;
 }
 
 .blog-lastest-author-right-link {
@@ -288,7 +298,7 @@ form button {
 }
 
 .blog-content-title a {
-  display: -webkit-box; 
+  display: -webkit-box;
   overflow: hidden;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -318,7 +328,7 @@ form button {
 
 @media screen and (max-width: 1024px) {
   .blog-lastest {
-     width: 700px;
+    width: 700px;
   }
 
   .blog-lastest-content {
@@ -338,7 +348,7 @@ form button {
 
 @media screen and (max-width: 768px) {
   .blog-lastest {
-     width: 311px;
+    width: 311px;
   }
 
   .blog-lastest-content {
@@ -365,7 +375,7 @@ form button {
   }
 
   .blog-lastest-content-right > a {
-    display: -webkit-box; 
+    display: -webkit-box;
     overflow: hidden;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -374,7 +384,7 @@ form button {
     text-decoration: none;
     color: var(--primary-text-color);
     font-size: 18px;
-    font-family: 'Merriweather', serif;
+    font-family: "Merriweather", serif;
   }
 
   .blog-lastest-content-right > p {

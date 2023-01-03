@@ -1,68 +1,17 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+  <head>
+    <title>Signin successfully page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/profile.css" />
+    <link rel="stylesheet" href="/static/style.css" />
 
-<head>
-  <title>Homepage</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/static/style.css" />
-  <link rel="stylesheet" href="/static/style.css" />
-</head>
+    <script></script>
+  </head>
 
-<body>
-  <main>
-    <!-- User signed in -->
-    {{ if .Is_signed_in }}
-    <header>
-      <div class="menu-logo">
-        <a href="/">
-          Logo
-        </a>
-      </div>
-      <div class="menu-list">
-        <ul>
-          <li class="menu-list-username">
-            <a href="/profile" class="profile">
-              <span class="profile-username">
-                {{ .Profile_name }}
-              </span>
-              <div class="profile-avatar">
-                <img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Avatar profile image" />
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="/">Home</a>
-          </li>
-          <li>
-            <a href="/about">About</a>
-          </li>
-          <li>
-            <a href="/logout">Logout</a>
-          </li>
-        </ul>
-      </div>
-    </header>
-    {{ else }}
-    {{ template "header"}}
-    {{ end }}
-    <h2 class="title">Add blog</h2>
-    <div class="form-signin">
-      <form class="form" action="/add_single_blog" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="id_user" value="{{ .Id_user }}" />
-        <input type="text" name="title" placeholder="Title blog" required />
-        <br>
-        <input type="file" name="image_blog" placeholder="Avatar profile" />
-        <br>
-        <textarea id="content" name="content" rows="4" cols="30">
-          Content blog example
-        </textarea>
-        <br>
-        <div>
-          <button class="form-sbutmit" type="submit">Submit</button>
-        </div>
-      </form>
-    </div>
-  </main>
-</body>
-
+  <body>
+    <main>
+      <h2>Add blog page</h2>
+    </main>
+  </body>
 </html>

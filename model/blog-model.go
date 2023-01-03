@@ -42,7 +42,7 @@ func ReadTheLastestBlog(db *sql.DB) structs.Blog {
 	var createdAt string
 	var updatedAt sql.NullString
 	// var idComment sql.NullInt64
-  var amountOfLikes int
+	var amountOfLikes int
 	var idUser int
 	statement := `select id_blog, title, body, image_name, created_at, updated_at, amount_of_likes, id_user  
                 from blogs 
@@ -50,8 +50,8 @@ func ReadTheLastestBlog(db *sql.DB) structs.Blog {
                 limit 1;`
 	row := db.QueryRow(statement)
 	err := row.Scan(&idBlog, &title, &body, &imageName, &createdAt, &updatedAt, &amountOfLikes, &idUser)
-    fmt.Println("amoutOfLikes: ", amountOfLikes)
-    fmt.Println("id_user: ", idUser)
+	fmt.Println("amoutOfLikes: ", amountOfLikes)
+	fmt.Println("id_user: ", idUser)
 	if err != nil {
 		fmt.Println("Error when scan the lastest blog: ", err)
 	}
@@ -65,7 +65,7 @@ func ReadTheLastestBlog(db *sql.DB) structs.Blog {
 		Id_user:    idUser,
 	}
 
-  fmt.Println("blog: ", blog)
+	fmt.Println("blog: ", blog)
 
 	return blog
 }

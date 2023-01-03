@@ -17,7 +17,7 @@ func handler() {
 	http.HandleFunc("/about", controller.RenderAboutPage)
 	http.HandleFunc("/signin", controller.HandleSignIn)
 	http.HandleFunc("/signup", controller.HandlerSignup)
-	http.HandleFunc("/logout", controller.LogOut)
+	http.HandleFunc("/logout", controller.HandleLogout)
 
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
@@ -26,7 +26,7 @@ func handler() {
 func main() {
 	model.InitModel()
 	handler()
-	port := ":3005"
+	port := ":3000"
 	fmt.Println("Listenning on the port", port)
 	http.ListenAndServe(port, nil)
 }

@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Logout page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/profile.css" />
+  <link rel="icon" href="data:,">
+
+  <script>
+    setInterval(function () {
+      var span = document.querySelector("#counter");
+      var count = span.textContent - 1;
+      span.textContent = count;
+      if (count <= 0) {
+        window.location.replace("http://localhost:3000");
+      }
+    }, 1000);
+
+  </script>
+</head>
+
+<body>
+  <main>
+    <h2 style="text-align: center;" class="title">Logout successfully</h1>
+      <div style="padding: 4px 32px; 
+        text-align: center;
+        background-color: var(--bg-profile);
+        border-radius: 5px;
+        ">
+        <span>You will be redirect to the hompage after: </span>
+        <span id="counter">3</span>
+        <span id="seconds">s</span>
+      </div>
+  </main>
+</body>
+
+</html>

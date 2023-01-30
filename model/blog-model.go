@@ -99,16 +99,15 @@ func readTheLastIdBlogInTableBlog(db *sql.DB) int {
 
 // Read all blogs except the first one cause it is the lastest blog
 func ReadAllBlogs(db *sql.DB) []structs.Blog {
-	fmt.Println("ReadAllBlogs")
+	fmt.Println("ReadAllBlogs mode")
 	lastestIdBlog := readTheLastIdBlogInTableBlog(db)
-	fmt.Println("lastestIdBlog: ", lastestIdBlog)
 	var idBlog int
 	var title string
 	var body string
 	var imageName string
 	var createdAt string
 	var updatedAt sql.NullString
-	var idComment sql.NullInt64
+	// var idComment sql.NullInt64
 	var amountOfLikes int
 	var idUser int
 	blogs := make([]structs.Blog, 0)
@@ -129,12 +128,11 @@ func ReadAllBlogs(db *sql.DB) []structs.Blog {
 		}
 
 		for rows.Next() {
-			err := rows.Scan(&idBlog, &title, &body, &imageName, &createdAt, &updatedAt, &idComment, &idUser, &amountOfLikes)
+			// err := rows.Scan(&idBlog, &title, &body, &imageName, &createdAt, &updatedAt, &idComment, &idUser, &amountOfLikes)
+			err := rows.Scan(&idBlog, &title, &body, &imageName, &createdAt, &updatedAt, &idUser, &amountOfLikes)
 			if err != nil {
 				fmt.Println("Error when scan data here: ", err)
 			}
-
-			fmt.Println("amoutOfLikes: ", amountOfLikes)
 
 			blog := structs.Blog{
 				Id_blog:    idBlog,

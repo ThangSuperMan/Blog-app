@@ -54,7 +54,6 @@ function handleClickEditButton(event) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  // const addBlogBtn = document.querySelector("#add_blog")
   const editProfileNameBtn = document.querySelector("#edit_profile_name");
   const editPasswordBtn = document.querySelector("#edit_password");
   const profileTemplate = document.querySelector(".profile-template");

@@ -1,0 +1,30 @@
+.add-blog-title {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.form-add-blog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 400px;
+  margin-top: 20px;
+  margin-inline: auto;
+}
+
+.form-add-blog input {
+  width: 100%;
+}
+
+.form-add-blog input:not(:last-child) {
+  margin-top: 12px;
+}
+
+.form-add-blog textarea {
+  width: 400px;
+}
+
+.button-add-blog {
+  margin-top: 12px;
+}

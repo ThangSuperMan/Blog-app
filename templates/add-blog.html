@@ -3,15 +3,64 @@
   <head>
     <title>Signin successfully page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/static/profile.css" />
     <link rel="stylesheet" href="/static/style.css" />
-
-    <script></script>
+    <link rel="stylesheet" href="/static/add-blog.css" />
   </head>
 
   <body>
     <main>
-      <h2>Add blog page</h2>
+      <!-- User signed in -->
+      {{ if .Is_signed_in }}
+      <header>
+        <div class="menu-logo">
+          <a href="/"> Thang Blog </a>
+        </div>
+        <div class="menu-list">
+          <ul>
+            <li class="menu-list-username">
+              <a href="/profile" class="profile">
+                <span class="profile-username"> {{ .Profile_name }} </span>
+                <div class="profile-avatar">
+                  <img
+                    src="/static/uploads/images/users/{{ .Avatar_name }}"
+                    alt="Avatar profile image"
+                  />
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="/">Home</a>
+            </li>
+            <li>
+              <a href="/about">About</a>
+            </li>
+            <li>
+              <a href="/logout">Logout</a>
+            </li>
+            <li>
+              <!-- Get request -->
+              <a class="primary-button" href="/add_blog">Add blog</a>
+            </li>
+          </ul>
+        </div>
+      </header>
+      {{ else }} {{ template "header"}} {{ end }}
+      <h2 class="add-blog-title">Add blog page</h2>
+      <p>Id user: {{ .Id_user }}</p>
+      <form
+        class="form-add-blog"
+        action="/add_single_blog"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <input name="title" type="text" placeholder="Title blog" required />
+        <textarea name="content" rows="4" cols="50" required>Content</textarea>
+        <input name="image_blog" type="file" required />
+        <input name="id_user" type="hidden" value="{{ .Id_user }}" required />
+        <button class="primary-button button-add-blog" type="submit">
+          Add blog
+        </button>
+      </form>
     </main>
   </body>
 </html>

@@ -19,6 +19,7 @@ func handler() {
 	http.HandleFunc("/signup", controller.HandlerSignup)
 	http.HandleFunc("/logout", controller.HandleLogout)
 
+	// Load the file servers (css, images, ...)
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 }

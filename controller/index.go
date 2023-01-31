@@ -5,13 +5,13 @@ import (
 	"Blog/model"
 	"Blog/structs"
 	"fmt"
-	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
+	"text/template"
 	"time"
 
 	"github.com/google/uuid"
@@ -149,15 +149,6 @@ func HandleAddSingleBlog(w http.ResponseWriter, r *http.Request) {
 
 func RenderAddBlogPage(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("RenderAddBlogPage")
-	// if r.Method == http.MethodGet {
-	// 	fmt.Println("Get method")
-	// 	templateName := "add-blog.html"
-	// 	RenderTemplate(templateName, w, r)
-	// 	// return
-	// }
-
-	// Post Method
-	// For adding the blog
 	var cookieExists bool = CheckSessionCookieExists(w, r)
 	if cookieExists {
 		fmt.Println("is cookieExists  :>> ", cookieExists)
@@ -221,8 +212,16 @@ func RenderBlogDetailPage(w http.ResponseWriter, r *http.Request) {
 		var sessionToken string = GetSessionTokenCookie(cookieName, r)
 		if sessionToken != "" {
 			var user structs.User
+			// This user is logged in must not use this one
 			var idUser int = model.GetIdUserFromSessionsTable(db, sessionToken)
+
+			// Get info user logged in
 			user = model.GetInfoUser(db, idUser)
+
+			// Override the idUser from the http request
+			idUser = blogDetail.Id_user
+			userOwnBlog := model.GetInfoUser(db, idUser)
+
 			data := structs.AccessToken{
 				Is_signed_in:                      true,
 				Username:                          user.Username,
@@ -230,7 +229,7 @@ func RenderBlogDetailPage(w http.ResponseWriter, r *http.Request) {
 				Profile_name:                      user.Profile_name,
 				Avatar_name:                       user.Avatar_name,
 				Blog_detail:                       blogDetail,
-				Author_of_the_current_blog_detail: user,
+				Author_of_the_current_blog_detail: userOwnBlog,
 			}
 
 			fmt.Println("blogDetail.Created_at: ", blogDetail.Created_at)
@@ -273,6 +272,8 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 			var idUser int = model.GetIdUserFromSessionsTable(db, sessionToken)
 			var blogs []structs.Blog = model.ReadAllBlogs(db)
 
+			fmt.Println("blogs: ", blogs)
+
 			var lastestBlog structs.Blog
 			lastestBlog = model.ReadTheLastestBlog(db)
 			var authorOwnTheLastestBlog structs.AuthorOfTheLastestBlog
@@ -301,6 +302,9 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 				Small_info_user_own_blogs:  smallInfoUsersOwnBlogs,
 			}
 
+			fmt.Println("Small_info_user_own_blogs: ", data.Small_info_user_own_blogs)
+			fmt.Println("blogs: ", data.Blogs)
+
 			tpl.ExecuteTemplate(w, templateName, data)
 		} else {
 			db := model.ConnectDatabase()
@@ -323,6 +327,8 @@ func RenderHomePage(w http.ResponseWriter, r *http.Request) {
 				Author_of_the_lastest_blog: authorOwnTheLastestBlog,
 				Small_info_user_own_blogs:  smallInfoUsersOwnBlogs,
 			}
+
+			fmt.Println("Small_info_user_own_blogs: ", data.Small_info_user_own_blogs)
 
 			tpl.ExecuteTemplate(w, templateName, data)
 		}

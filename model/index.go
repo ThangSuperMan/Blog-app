@@ -3,6 +3,7 @@ package model
 import (
 	"database/sql"
 	"fmt"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -37,8 +38,6 @@ func createTables(db *sql.DB) {
 		"body"            text not null,
 		"image_name"      text not null,
 		"created_at"      text not null,
-		"updated_at"      text,
-		"amount_of_likes" integer not null,
 		"id_user"         integer,
 		foreign key (id_user) 
 		  references users (id_user) 

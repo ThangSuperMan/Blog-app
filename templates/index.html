@@ -14,8 +14,10 @@
 
 <body>
   <main>
+	<!-- Assign new variable -->
     {{ $blogs := .Blogs}}
     {{ $smallInfoUsersOwnBlogs := .Small_info_user_own_blogs }}
+
     <!-- User signed in -->
     {{ if .Is_signed_in }}
 		<header>
@@ -32,7 +34,7 @@
 					{{ .Profile_name }}
 				  </span>
 				  <div class="profile-avatar">
-					<img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Avatar profile image" />
+					  <img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Avatar profile image" />
 				  </div>
 				</a>
 			  </li>
@@ -82,9 +84,9 @@
         </div>
       </div>
       <div class="blogs">
-        {{ range $blog := $blogs }}
+   {{ range $blog := $blogs }}
+	 <!-- Assign new variable -->
 			{{ $idUserOwnBlog := .Id_user}}
-			<div>idUserOwnBlog {{ $idUserOwnBlog }}</div>
 			<div class="blog">
 			  <div class="blog-image">
 				<a href="/blog_detail?id={{ .Id_blog }}">
@@ -105,7 +107,6 @@
 					{{ if eq $idUserOwnBlog .Id_user}}
 						<div class="blog-author-wrapper">
 						  <div class="blog-author">
-							  <div>Here</div>
 							<img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Image author own blog" />
 							<div class="blog-author-right">
 							  <a href="/author">{{ .Profile_name }}</a>

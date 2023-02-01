@@ -17,9 +17,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// One hour
-var LIVETIME_COOKIE int = 1
-
 func HandleSessionsTokenCookieStillNotLogOut(username string) {
 	db := model.ConnectDatabase()
 	model.DeleteSessionCookie(db, username)

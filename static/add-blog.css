@@ -28,3 +28,14 @@
 .button-add-blog {
   margin-top: 12px;
 }
+
+input,
+textarea {
+  display: block;
+  width: calc(70% - 26px);
+  line-height: 20px;
+  margin-top: 4px;
+  padding: 4px 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}

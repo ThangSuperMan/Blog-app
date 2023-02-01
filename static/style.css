@@ -38,6 +38,7 @@ header {
   padding: 16px 32px;
   max-width: 700px;
   margin-inline: auto;
+  border-radius: 5px;
 }
 
 .profile {

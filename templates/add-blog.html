@@ -46,14 +46,19 @@
       </header>
       {{ else }} {{ template "header"}} {{ end }}
       <h2 class="add-blog-title">Add blog page</h2>
-      <p>Id user: {{ .Id_user }}</p>
       <form
         class="form-add-blog"
         action="/add_single_blog"
         method="post"
         enctype="multipart/form-data"
       >
-        <input name="title" type="text" placeholder="Title blog" required />
+        <input
+          class="input"
+          name="title"
+          type="text"
+          placeholder="Title blog"
+          required
+        />
         <textarea name="content" rows="4" cols="50" required>Content</textarea>
         <input name="image_blog" type="file" required />
         <input name="id_user" type="hidden" value="{{ .Id_user }}" required />

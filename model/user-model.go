@@ -4,6 +4,7 @@ import (
 	"Blog/structs"
 	"database/sql"
 	"fmt"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -13,8 +14,8 @@ func GetAllSmallInfoUsers(db *sql.DB) []structs.SmallInfoUser {
 	var profileName string
 	var avatarName string
 	statment := `select id_user, profile_name, avatar_name from users`
-	rows, err := db.Query(statment)
 
+	rows, err := db.Query(statment)
 	if err != nil {
 		fmt.Println("Error when get all user: ", err)
 	}

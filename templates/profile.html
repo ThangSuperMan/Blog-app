@@ -1,109 +1,117 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+  <head>
+    <title>Homepage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/profile.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+      integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 
-<head>
-  <title>Homepage</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/static/style.css" />
-  <link rel="stylesheet" href="/static/profile.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
-    integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Scripts -->
+    <script type="text/javascript" src="/static/js/profile.js"></script>
+  </head>
 
-  <!-- Scripts -->
-  <script type="text/javascript" src="/static/js/profile.js"></script>
-</head>
-
-<body>
-  <div class="profile-template-background"></div>
-  <div class="profile-template"></div>
-  <main>
-    <!-- User signed in -->
-    {{ if .Is_signed_in }}
-    <header>
-      <div class="menu-logo">
-        <a href="/">
-          Logo
-        </a>
-      </div>
-      <div class="menu-list">
-        <ul>
-          <li class="menu-list-username">
-            <a href="/profile" class="profile">
-              <span class="profile-username">
-                {{ .Profile_name }}
-              </span>
-              <div class="profile-avatar">
-                <img src="/static/uploads/images/users/{{ .Avatar_name }}" alt="Avatar profile image" />
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="/">Home</a>
-          </li>
-          <li>
-            <a href="/about">About</a>
-          </li>
-          <li>
-            <a href="/logout">Logout</a>
-          </li>
-        </ul>
-      </div>
-    </header>
-    {{ else }}
-    {{ template "header"}}
-    {{ end }}
-    <h2 class="title">Profile page</h2>
-    <div class="profile-container">
-      <div>
-        <div class="profile-container-top">
-          <div>
-            <img src="/static/uploads/images/users/{{ .Avatar_name }}" />
-            <h3>{{ .Profile_name }}</h3>
-          </div>
+  <body>
+    <div class="profile-template-background"></div>
+    <div class="profile-template"></div>
+    <main>
+      <!-- User signed in -->
+      {{ if .Is_signed_in }}
+      <header>
+        <div class="menu-logo">
+          <a href="/"> Logo </a>
         </div>
-        <div class="profile-container-content">
-          <div>
-            <form action="/add_blog" method="post">
-              <div class="text-field">
-                <label for="profile_name">Profile name</label>
-                <div class="text-field-wrapper">
-                  <input type="text" value="{{ .Profile_name }}" placeholder="Username" id="profile_name" />
-                  <div>
-                    <i class="fa-solid fa-pencil"></i>
-                    <span id="edit_profile_name" class="edit">Edit</span>
+        <div class="menu-list">
+          <ul>
+            <li class="menu-list-username">
+              <a href="/profile" class="profile">
+                <span class="profile-username"> {{ .Profile_name }} </span>
+                <div class="profile-avatar">
+                  <img
+                    src="/static/uploads/images/users/{{ .Avatar_name }}"
+                    alt="Avatar profile image"
+                  />
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="/">Home</a>
+            </li>
+            <li>
+              <a href="/about">About</a>
+            </li>
+            <li>
+              <a href="/logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </header>
+      {{ else }} {{ template "header"}} {{ end }}
+      <h2 class="title">Profile page</h2>
+      <div class="profile-container">
+        <div>
+          <div class="profile-container-top">
+            <div>
+              <img src="/static/uploads/images/users/{{ .Avatar_name }}" />
+              <h3>{{ .Profile_name }}</h3>
+            </div>
+          </div>
+          <div class="profile-container-content">
+            <div>
+              <form action="/add_blog" method="post">
+                <div class="text-field">
+                  <label for="profile_name">Profile name</label>
+                  <div class="text-field-wrapper">
+                    <input
+                      type="text"
+                      value="{{ .Profile_name }}"
+                      placeholder="Username"
+                      id="profile_name"
+                    />
+                    <div>
+                      <i class="fa-solid fa-pencil"></i>
+                      <span id="edit_profile_name" class="edit">Edit</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="text-field">
-                <label for="username">Username</label>
-                <div class="text-field-wrapper">
-                  <input type="text" value="{{ .Username }}" placeholder="Username" id="username" />
-                </div>
-              </div>
-              <div class="text-field">
-                <label for="password">Password</label>
-                <div class="text-field-wrapper">
-                  <input type="password" name="password" value="Example password" placeholder="Password"
-                    id="password" />
-                  <div>
-                    <i class="fa-solid fa-pencil"></i>
-                    <span id="edit_password" class="edit">Edit</span>
+                <div class="text-field">
+                  <label for="username">Username</label>
+                  <div class="text-field-wrapper">
+                    <input
+                      type="text"
+                      value="{{ .Username }}"
+                      placeholder="Username"
+                      id="username"
+                    />
                   </div>
                 </div>
-              </div>
-              <div class="text-field-wrapper">
-                <span>Add your blog and share it with your friends</span>
-                <!-- Main feature -->
-                <input type="hidden" name="id_user" value="{{ .Id_user }}" />
-                <button type="submit" class="add-blog" id="add_blog">Add Blog</button>
-              </div>
-            </form>
+                <div class="text-field">
+                  <label for="password">Password</label>
+                  <div class="text-field-wrapper">
+                    <input
+                      type="password"
+                      name="password"
+                      value="Example password"
+                      placeholder="Password"
+                      id="password"
+                    />
+                    <div>
+                      <i class="fa-solid fa-pencil"></i>
+                      <span id="edit_password" class="edit">Edit</span>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </main>
-</body>
-
+    </main>
+  </body>
 </html>

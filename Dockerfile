@@ -1,4 +1,4 @@
-FROM golang
+FROM golang:1.18.10-alpine3.17
 
 WORKDIR /app
 
@@ -9,6 +9,6 @@ COPY go.sum ./
 
 RUN go mod download
 
-RUN go build -o main .
+RUN go build -o main main.go
 
 CMD [ "./main" ]

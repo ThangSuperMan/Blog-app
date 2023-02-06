@@ -11,7 +11,8 @@
       var count = span.textContent - 1;
       span.textContent = count;
       if (count <= 0) {
-        window.location.replace("http://localhost:3000/profile");
+  		const address = "http://34.201.26.34:3000/profile"
+        window.location.replace(address);
       }
     }, 1000);
 

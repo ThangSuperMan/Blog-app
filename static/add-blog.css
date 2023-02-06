@@ -23,6 +23,7 @@
 
 .form-add-blog textarea {
   width: 400px;
+  padding: 0;
 }
 
 .button-add-blog {
